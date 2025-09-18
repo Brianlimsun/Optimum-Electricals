@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, Link } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import LeadCapture from './pages/LeadCapture'
 import BookingForm from './pages/BookingForm'
 import PaymentConfirmation from './pages/PaymentConfirmation'

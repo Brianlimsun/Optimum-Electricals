@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { CheckCircle, Upload, ArrowLeft, CreditCard } from 'lucide-react'
+import { CheckCircle, Upload, CreditCard } from 'lucide-react'
 
 interface PaymentData {
   customerName: string

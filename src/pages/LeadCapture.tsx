@@ -31,6 +31,9 @@ function LeadCapture() {
   function handleContinue(e: React.FormEvent) {
     e.preventDefault()
     if (!validate()) return
+    try {
+      sessionStorage.setItem('lead', JSON.stringify({ name, phone }))
+    } catch {}
     navigate('/booking')
   }
 

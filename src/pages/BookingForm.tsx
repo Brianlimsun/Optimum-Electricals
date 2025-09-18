@@ -12,7 +12,7 @@ type ImageItem = {
 
 const MAX_IMAGES = 6
 
-function compressImage(file: File, maxSize = 1600, quality = 0.8): Promise<string> {
+function compressImage(file: File, maxSize = 800, quality = 0.6): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.onload = () => {
@@ -59,17 +59,33 @@ function BookingForm() {
   ]
 
   useEffect(() => {
-    // Ensure fields start empty when arriving from home
-    setName('')
-    setPhone('')
+    // Pre-fill from LeadCapture if available
+    try {
+      const raw = sessionStorage.getItem('lead')
+      if (raw) {
+        const lead = JSON.parse(raw) as { name?: string; phone?: string }
+        if (lead?.name) setName(lead.name)
+        if (lead?.phone) setPhone(lead.phone)
+      }
+    } catch {}
   }, [])
 
   const canAddMore = useMemo(() => images.length < MAX_IMAGES, [images.length])
 
   const isToday = useMemo(() => {
     if (!bookingDate) return false
-    const today = new Date().toISOString().split('T')[0]
-    return bookingDate === today
+    // Get today's date in local timezone (YYYY-MM-DD format)
+    const today = new Date()
+    const year = today.getFullYear()
+    const month = String(today.getMonth() + 1).padStart(2, '0')
+    const day = String(today.getDate()).padStart(2, '0')
+    const todayString = `${year}-${month}-${day}`
+    
+    console.log('Booking date:', bookingDate)
+    console.log('Today string:', todayString)
+    console.log('Is today?', bookingDate === todayString)
+    
+    return bookingDate === todayString
   }, [bookingDate])
 
   const totalFee = useMemo(() => {
@@ -159,7 +175,28 @@ function BookingForm() {
       }
 
       // Store booking data in sessionStorage for payment page
-      sessionStorage.setItem('bookingData', JSON.stringify(submissionData))
+      try {
+        sessionStorage.setItem('bookingData', JSON.stringify(submissionData))
+      } catch (error) {
+        // If storage quota exceeded, try with smaller images
+        console.warn('Storage quota exceeded, retrying with smaller images')
+        const smallerImageData = await Promise.all(
+          images
+            .filter((img) => !!img.file)
+            .map(async (img) => {
+              const compressed = await compressImage(img.file as File, 400, 0.4)
+              return {
+                name: (img.file as File).name,
+                data: compressed,
+              }
+            })
+        )
+        const smallerSubmissionData = {
+          ...submissionData,
+          images: smallerImageData,
+        }
+        sessionStorage.setItem('bookingData', JSON.stringify(smallerSubmissionData))
+      }
       
       // Redirect to payment page
       window.location.href = '/payment'
