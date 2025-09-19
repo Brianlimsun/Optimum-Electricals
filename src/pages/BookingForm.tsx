@@ -199,7 +199,7 @@ function BookingForm() {
       }
       
       // Redirect to payment page
-      window.location.href = '/payment'
+      window.location.href = './payment'
     } catch (err: any) {
       setError(err?.message || 'Failed to prepare booking. Please try again.')
       setSubmitting(false)
@@ -209,7 +209,7 @@ function BookingForm() {
   return (
     <div className="booking-form">
       <div className="booking-header">
-        <a href="/" className="back-link">←</a>
+        <a href="./" className="back-link">←</a>
         <div className="header-content">
           <h1>
             <span className="book-text">Book</span>

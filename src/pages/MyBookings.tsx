@@ -36,7 +36,7 @@ function MyBookings() {
     return (
       <div className="booking-form">
         <div className="booking-header">
-          <a href="/" className="back-link">←</a>
+          <a href="./" className="back-link">←</a>
           <div className="header-content">
             <h1>
               <span className="book-text">My</span>
@@ -53,7 +53,7 @@ function MyBookings() {
   return (
     <div className="booking-form">
       <div className="booking-header">
-        <a href="/" className="back-link">←</a>
+        <a href="./" className="back-link">←</a>
         <div className="header-content">
           <h1>
             <span className="book-text">My</span>
@@ -76,7 +76,7 @@ function MyBookings() {
         </div>
       ))}
 
-      <a href="/" className="home-link">← Make another booking</a>
+      <a href="./" className="home-link">← Make another booking</a>
     </div>
   )
 }

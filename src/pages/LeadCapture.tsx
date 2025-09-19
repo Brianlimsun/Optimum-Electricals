@@ -41,7 +41,7 @@ function LeadCapture() {
     <div className="lead-capture">
       <div className="icon" style={{ width: 80, height: 80, background: 'transparent', boxShadow: 'none', padding: 0 }}>
         <img
-          src="/logo.png"
+          src="./logo.png"
           alt="Optimum Electricals"
           style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover', display: 'block' }}
         />
@@ -84,7 +84,7 @@ function LeadCapture() {
 
       {hasBookings && (
         <div style={{ marginTop: 16 }}>
-          <a href="/my-bookings" className="home-link">
+          <a href="./my-bookings" className="home-link">
             <ClipboardList className="w-5 h-5" /> View My Bookings
           </a>
         </div>

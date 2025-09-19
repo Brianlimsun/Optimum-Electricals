@@ -221,7 +221,7 @@ function PaymentConfirmation() {
             <p>Our team will contact you shortly to confirm your appointment and provide any additional details.</p>
             <p>You can expect a call within 30 minutes during business hours.</p>
           </div>
-          <a href="/" className="home-link">← Back to Home</a>
+          <a href="./" className="home-link">← Back to Home</a>
         </div>
       </div>
     )
