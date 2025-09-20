@@ -3,6 +3,7 @@ import LeadCapture from './pages/LeadCapture'
 import BookingForm from './pages/BookingForm'
 import PaymentConfirmation from './pages/PaymentConfirmation'
 import MyBookings from './pages/MyBookings'
+import PrivacyPolicy from './pages/PrivacyPolicy'
 import './App.css'
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
           <Route path="/booking" element={<BookingForm />} />
           <Route path="/payment" element={<PaymentConfirmation />} />
           <Route path="/my-bookings" element={<MyBookings />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
