@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { CheckCircle, Upload, CreditCard } from 'lucide-react'
 
 interface PaymentData {
@@ -17,6 +18,7 @@ interface PaymentData {
 }
 
 function PaymentConfirmation() {
+  const navigate = useNavigate()
   const [paymentData, setPaymentData] = useState<PaymentData | null>(null)
   const [paymentScreenshot, setPaymentScreenshot] = useState<File | null>(null)
   const [screenshotPreview, setScreenshotPreview] = useState<string | null>(null)
@@ -178,7 +180,7 @@ function PaymentConfirmation() {
       <div className="payment-confirmation">
         <div className="error-message">
           <p>No booking data found. Please complete the booking form first.</p>
-          <a href="./booking" className="back-link">← Back to Booking</a>
+          <button onClick={() => navigate('/booking')} className="back-link">← Back to Booking</button>
         </div>
       </div>
     )
@@ -223,7 +225,7 @@ function PaymentConfirmation() {
             <p>Our team will contact you shortly to confirm your appointment and provide any additional details.</p>
             <p>You can expect a call within 30 minutes during business hours.</p>
           </div>
-          <a href="./" className="home-link">← Back to Home</a>
+          <button onClick={() => navigate('/')} className="home-link">← Back to Home</button>
         </div>
       </div>
     )
@@ -232,7 +234,7 @@ function PaymentConfirmation() {
   return (
     <div className="payment-confirmation">
       <div className="payment-header">
-        <a href="./booking" className="back-link">←</a>
+        <button onClick={() => navigate('/booking')} className="back-link">←</button>
         <div className="header-content">
           <h1>
             <span className="payment-text">Payment</span>

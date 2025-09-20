@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { MapPin, Clock, Camera, CheckCircle } from 'lucide-react'
 
 type ImageItem = {
@@ -38,6 +39,7 @@ function compressImage(file: File, maxSize = 800, quality = 0.6): Promise<string
 }
 
 function BookingForm() {
+  const navigate = useNavigate()
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [locality, setLocality] = useState('')
@@ -198,8 +200,8 @@ function BookingForm() {
         sessionStorage.setItem('bookingData', JSON.stringify(smallerSubmissionData))
       }
       
-      // Redirect to payment page
-      window.location.href = './payment'
+      // Navigate to payment page using React Router
+      navigate('/payment')
     } catch (err: any) {
       setError(err?.message || 'Failed to prepare booking. Please try again.')
       setSubmitting(false)
@@ -209,7 +211,7 @@ function BookingForm() {
   return (
     <div className="booking-form">
       <div className="booking-header">
-        <a href="./" className="back-link">←</a>
+        <button onClick={() => navigate('/')} className="back-link">←</button>
         <div className="header-content">
           <h1>
             <span className="book-text">Book</span>

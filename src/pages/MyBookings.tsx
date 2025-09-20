@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 type StoredBooking = {
   id: string
@@ -17,6 +18,7 @@ type StoredBooking = {
 const STORAGE_KEY = 'optimum:bookings'
 
 function MyBookings() {
+  const navigate = useNavigate()
   const [bookings, setBookings] = useState<StoredBooking[]>([])
 
   useEffect(() => {
@@ -36,7 +38,7 @@ function MyBookings() {
     return (
       <div className="booking-form">
         <div className="booking-header">
-          <a href="./" className="back-link">←</a>
+          <button onClick={() => navigate('/')} className="back-link">←</button>
           <div className="header-content">
             <h1>
               <span className="book-text">My</span>
@@ -45,7 +47,7 @@ function MyBookings() {
             <p className="greeting">No bookings saved yet.</p>
           </div>
         </div>
-        <a href="./booking" className="home-link">Book a Service</a>
+        <button onClick={() => navigate('/booking')} className="home-link">Book a Service</button>
       </div>
     )
   }
@@ -53,7 +55,7 @@ function MyBookings() {
   return (
     <div className="booking-form">
       <div className="booking-header">
-        <a href="./" className="back-link">←</a>
+        <button onClick={() => navigate('/')} className="back-link">←</button>
         <div className="header-content">
           <h1>
             <span className="book-text">My</span>
@@ -76,7 +78,7 @@ function MyBookings() {
         </div>
       ))}
 
-      <a href="./" className="home-link">← Make another booking</a>
+      <button onClick={() => navigate('/')} className="home-link">← Make another booking</button>
     </div>
   )
 }

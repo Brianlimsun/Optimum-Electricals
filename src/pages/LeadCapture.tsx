@@ -84,9 +84,9 @@ function LeadCapture() {
 
       {hasBookings && (
         <div style={{ marginTop: 16 }}>
-          <a href="./my-bookings" className="home-link">
+          <button onClick={() => navigate('/my-bookings')} className="home-link">
             <ClipboardList className="w-5 h-5" /> View My Bookings
-          </a>
+          </button>
         </div>
       )}
 
