@@ -6,15 +6,23 @@ import App from './App.tsx'
 
 // Determine basename based on the current domain
 const getBasename = () => {
-  // If we're on the custom domain, use root path
-  if (window.location.hostname === 'optimumelectricals.com') {
+  const hostname = window.location.hostname
+  
+  // Debug logging
+  console.log('Current hostname:', hostname)
+  
+  // If we're on the custom domain (including www subdomain), use root path
+  if (hostname === 'optimumelectricals.com' || hostname === 'www.optimumelectricals.com') {
+    console.log('Using custom domain basename: /')
     return '/'
   }
   // If we're on GitHub Pages, use the repository path
-  if (window.location.hostname === 'brianlimsun.github.io') {
+  if (hostname === 'brianlimsun.github.io') {
+    console.log('Using GitHub Pages basename: /Optimum-Electricals/')
     return '/Optimum-Electricals/'
   }
   // For local development, use root path
+  console.log('Using default basename: /')
   return '/'
 }
 
