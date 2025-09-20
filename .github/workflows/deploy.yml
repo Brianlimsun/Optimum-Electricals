@@ -38,13 +38,18 @@ jobs:
       env:
         VITE_APPS_SCRIPT_WEBHOOK: ${{ secrets.VITE_APPS_SCRIPT_WEBHOOK }}
         
+    - name: Copy built files to root for custom domain
+      run: |
+        cp -r dist/* .
+        cp CNAME dist/ 2>/dev/null || true
+        
     - name: Setup Pages
       uses: actions/configure-pages@v4
       
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: ./dist
+        path: .
         
     - name: Deploy to GitHub Pages
       id: deployment
