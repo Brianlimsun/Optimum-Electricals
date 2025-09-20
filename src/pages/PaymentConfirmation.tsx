@@ -130,19 +130,21 @@ function PaymentConfirmation() {
       // Submit to Google Apps Script in background (fire-and-forget)
       const webhookUrl = import.meta.env.VITE_APPS_SCRIPT_WEBHOOK
       if (!webhookUrl) {
-        throw new Error('Google Apps Script Webhook URL is not configured. Please check your environment variables.')
+        console.error('Google Apps Script Webhook URL is not configured. Please check your environment variables.')
+        // Don't throw error - let the booking continue even if Google Sheets fails
+        // This ensures the payment confirmation still works locally
+      } else {
+        console.log('Submitting to Google Sheets (background):', finalData)
+        // Don't await; let it run in background to make UI instant
+        fetch(webhookUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(finalData),
+        }).catch((fetchError) => {
+          console.error('Background submit error:', fetchError)
+        })
       }
-
-      console.log('Submitting to Google Sheets (background):', finalData)
-      // Don't await; let it run in background to make UI instant
-      fetch(webhookUrl, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(finalData),
-      }).catch((fetchError) => {
-        console.error('Background submit error:', fetchError)
-      })
 
       // Persist booking for later access by the client
       try {
