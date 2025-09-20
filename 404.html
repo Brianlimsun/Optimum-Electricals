@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="refresh" content="0;url=/Optimum-Electricals/" />
+    <script>
+      // GH Pages SPA redirect for subdirectory
+      sessionStorage.redirect = location.pathname + location.search + location.hash;
+      location.replace('/Optimum-Electricals/');
+    </script>
+  </head>
+  <body></body>
+  <script>
+    // On app load, if redirected, push the path
+    (function() {
+      const redirect = sessionStorage.redirect
+      if (redirect) {
+        sessionStorage.removeItem('redirect')
+        const url = new URL(redirect, location.origin)
+        history.replaceState(null, '', url)
+      }
+    })()
+  </script>
+</html>
+
+
