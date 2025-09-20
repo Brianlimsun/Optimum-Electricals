@@ -408,11 +408,15 @@ function getAvailableTimeSlots(date) {
     // Get booked time slots for the specified date
     const debugInfo = {
       lookingForDate: date,
+      headers: headers,
+      dateIndex: dateIndex,
+      timeSlotIndex: timeSlotIndex,
       allBookingDates: bookings.map(row => ({ 
         date: row[dateIndex], 
         timeSlot: row[timeSlotIndex],
         dateType: typeof row[dateIndex],
-        dateValue: row[dateIndex]
+        dateValue: row[dateIndex],
+        fullRow: row
       }))
     };
     
