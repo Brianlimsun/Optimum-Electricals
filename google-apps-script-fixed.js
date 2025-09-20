@@ -443,6 +443,15 @@ function getAvailableTimeSlots(date) {
           rowDateString = String(rowDate);
         }
         
+        // Add debugging for date conversion
+        debugInfo.dateConversions = debugInfo.dateConversions || [];
+        debugInfo.dateConversions.push({
+          original: rowDate,
+          converted: rowDateString,
+          target: date,
+          match: rowDateString === date
+        });
+        
         return rowDateString === date;
       })
       .map(row => row[timeSlotIndex])
