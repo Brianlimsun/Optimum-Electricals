@@ -45,7 +45,7 @@ function MyBookings() {
             <p className="greeting">No bookings saved yet.</p>
           </div>
         </div>
-        <a href="/booking" className="home-link">Book a Service</a>
+        <a href="./booking" className="home-link">Book a Service</a>
       </div>
     )
   }

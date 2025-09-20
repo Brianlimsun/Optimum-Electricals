@@ -176,7 +176,7 @@ function PaymentConfirmation() {
       <div className="payment-confirmation">
         <div className="error-message">
           <p>No booking data found. Please complete the booking form first.</p>
-          <a href="/booking" className="back-link">← Back to Booking</a>
+          <a href="./booking" className="back-link">← Back to Booking</a>
         </div>
       </div>
     )
@@ -230,7 +230,7 @@ function PaymentConfirmation() {
   return (
     <div className="payment-confirmation">
       <div className="payment-header">
-        <a href="/booking" className="back-link">←</a>
+        <a href="./booking" className="back-link">←</a>
         <div className="header-content">
           <h1>
             <span className="payment-text">Payment</span>
@@ -295,7 +295,7 @@ function PaymentConfirmation() {
             <h4>Scan QR Code to Pay</h4>
             <div className="qr-container">
               <div className="qr-code">
-                <img src="/images/qrcode.png" alt="UPI Payment QR Code" className="qr-image" />
+                <img src="./qrcode.png" alt="UPI Payment QR Code" className="qr-image" />
               </div>
               <div className="upi-details">
                 <div className="upi-id-row">
