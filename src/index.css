@@ -641,6 +641,27 @@ body {
   color: #1e293b;
 }
 
+/* Time Slot Availability Styling */
+.loading-text {
+  font-size: 0.875rem;
+  color: var(--accent);
+  margin-left: 8px;
+}
+
+.no-slots-message {
+  margin-top: 8px;
+  padding: 12px;
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  color: #856404;
+}
+
+.no-slots-message p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
 /* Date Input Styling */
 .date-field{ width:100%; }
 .date-input {

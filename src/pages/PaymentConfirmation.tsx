@@ -280,12 +280,12 @@ function PaymentConfirmation() {
             <div className="amount-breakdown">
               <div className="amount-item">
                 <span>Locality Fee ({paymentData.locality})</span>
-                <span>₹{paymentData.totalFee - (paymentData.isUrgent ? 100 : 0)}</span>
+                <span>₹{paymentData.totalFee - (paymentData.isUrgent ? 50 : 0)}</span>
               </div>
               {paymentData.isUrgent && (
                 <div className="amount-item urgent">
                   <span>Urgent Same Day</span>
-                  <span>₹100</span>
+                  <span>₹50</span>
                 </div>
               )}
               <div className="amount-total">

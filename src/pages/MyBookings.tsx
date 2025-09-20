@@ -73,7 +73,7 @@ function MyBookings() {
           <div className="detail-item"><span className="label">Address</span><span className="value">{b.fullAddress}</span></div>
           <div className="detail-item"><span className="label">Problem</span><span className="value">{b.problemDescription}</span></div>
           <div className="detail-item"><span className="label">Date & Time</span><span className="value">{b.bookingDate} - {b.preferredTimeSlot}</span></div>
-          <div className="detail-item"><span className="label">Urgent</span><span className="value">{b.isUrgent ? 'Yes (+₹100)' : 'No'}</span></div>
+          <div className="detail-item"><span className="label">Urgent</span><span className="value">{b.isUrgent ? 'Yes (+₹50)' : 'No'}</span></div>
           <div className="detail-item"><span className="label">Total</span><span className="value">₹{b.totalFee}</span></div>
         </div>
       ))}

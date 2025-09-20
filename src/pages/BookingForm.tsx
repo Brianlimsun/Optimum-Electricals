@@ -52,6 +52,8 @@ function BookingForm() {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
+  const [availableTimeSlots, setAvailableTimeSlots] = useState<string[]>([])
+  const [loadingTimeSlots, setLoadingTimeSlots] = useState(false)
 
   const localityOptions = [
     { name: 'Rilbong', fee: 100 },
@@ -59,6 +61,50 @@ function BookingForm() {
     { name: 'Laitumkhrah', fee: 200 },
     { name: 'Other', fee: 200 }
   ]
+
+  const allTimeSlots = [
+    '08:00-10:00',
+    '10:00-12:00',
+    '12:00-14:00',
+    '14:00-16:00',
+    '16:00-18:00',
+    '18:00-20:00',
+  ]
+
+  // Function to check available time slots
+  const checkAvailableTimeSlots = async (date: string) => {
+    if (!date) {
+      setAvailableTimeSlots(allTimeSlots)
+      return
+    }
+
+    setLoadingTimeSlots(true)
+    try {
+      // Get existing bookings from localStorage
+      const STORAGE_KEY = 'optimum:bookings'
+      const existing = localStorage.getItem(STORAGE_KEY)
+      const bookings = existing ? JSON.parse(existing) : []
+      
+      // Filter bookings for the selected date
+      const bookedTimeSlots = bookings
+        .filter((booking: any) => booking.bookingDate === date)
+        .map((booking: any) => booking.preferredTimeSlot)
+      
+      // Find available time slots
+      const available = allTimeSlots.filter(slot => !bookedTimeSlots.includes(slot))
+      setAvailableTimeSlots(available)
+      
+      // If current selection is no longer available, clear it
+      if (timeSlot && !available.includes(timeSlot)) {
+        setTimeSlot('')
+      }
+    } catch (error) {
+      console.error('Error checking time slots:', error)
+      setAvailableTimeSlots(allTimeSlots)
+    } finally {
+      setLoadingTimeSlots(false)
+    }
+  }
 
   useEffect(() => {
     // Pre-fill from LeadCapture if available
@@ -71,6 +117,11 @@ function BookingForm() {
       }
     } catch {}
   }, [])
+
+  // Check available time slots when booking date changes
+  useEffect(() => {
+    checkAvailableTimeSlots(bookingDate)
+  }, [bookingDate])
 
   const canAddMore = useMemo(() => images.length < MAX_IMAGES, [images.length])
 
@@ -92,7 +143,7 @@ function BookingForm() {
 
   const totalFee = useMemo(() => {
     const localityFee = localityOptions.find(opt => opt.name === locality)?.fee || 0
-    const urgentFee = isToday ? 100 : 0
+    const urgentFee = isToday ? 50 : 0
     return localityFee + urgentFee
   }, [locality, isToday])
 
@@ -301,7 +352,7 @@ function BookingForm() {
           {isToday && (
             <div className="urgent-badge">
               <span className="urgent-icon">⚡</span>
-              <span>Urgent - Same Day Booking (+₹100)</span>
+              <span>Urgent - Same Day Booking (+₹50)</span>
             </div>
           )}
         </div>
@@ -310,16 +361,41 @@ function BookingForm() {
           <label className="section-title">
             <Clock className="icon" />
             <span>Preferred Time Slot *</span>
+            {loadingTimeSlots && <span className="loading-text">Checking availability...</span>}
           </label>
-          <select value={timeSlot} onChange={(e) => setTimeSlot(e.target.value)}>
-            <option value="">Select preferred time</option>
-            <option value="8:00-10:00">8:00 - 10:00</option>
-            <option value="10:00-12:00">10:00 - 12:00</option>
-            <option value="12:00-14:00">12:00 - 14:00</option>
-            <option value="14:00-16:00">14:00 - 16:00</option>
-            <option value="16:00-18:00">16:00 - 18:00</option>
-            <option value="18:00-20:00">18:00 - 20:00</option>
+          <select 
+            value={timeSlot} 
+            onChange={(e) => setTimeSlot(e.target.value)}
+            disabled={loadingTimeSlots || availableTimeSlots.length === 0}
+          >
+            <option value="">
+              {loadingTimeSlots 
+                ? 'Checking availability...' 
+                : availableTimeSlots.length === 0 
+                  ? 'No slots available for this date' 
+                  : 'Select preferred time'
+              }
+            </option>
+            {allTimeSlots.map(slot => {
+              const isAvailable = availableTimeSlots.includes(slot)
+              const isBooked = !isAvailable && bookingDate
+              return (
+                <option 
+                  key={slot} 
+                  value={slot} 
+                  disabled={!isAvailable}
+                  style={{ color: isBooked ? '#ff6b6b' : isAvailable ? '#51cf66' : '#868e96' }}
+                >
+                  {slot} {isBooked ? '(Booked)' : isAvailable ? '(Available)' : ''}
+                </option>
+              )
+            })}
           </select>
+          {bookingDate && availableTimeSlots.length === 0 && (
+            <div className="no-slots-message">
+              <p>All time slots are booked for this date. Please choose a different date.</p>
+            </div>
+          )}
         </div>
 
         <div className="form-group">
@@ -370,7 +446,7 @@ function BookingForm() {
               {isToday && (
                 <div className="fee-item urgent-fee">
                   <span>Urgent Same Day</span>
-                  <span>₹100</span>
+                  <span>₹50</span>
                 </div>
               )}
               <div className="fee-total">
