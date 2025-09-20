@@ -419,7 +419,18 @@ function getAvailableTimeSlots(date) {
     const bookedTimeSlots = bookings
       .filter(row => {
         const rowDate = row[dateIndex];
-        return rowDate === date;
+        
+        // Handle both string dates and Date objects
+        let rowDateString;
+        if (rowDate instanceof Date) {
+          rowDateString = rowDate.toISOString().split('T')[0];
+        } else if (typeof rowDate === 'string') {
+          rowDateString = rowDate.split('T')[0]; // In case it's a string with time
+        } else {
+          rowDateString = String(rowDate);
+        }
+        
+        return rowDateString === date;
       })
       .map(row => row[timeSlotIndex])
       .filter(slot => slot && slot.trim() !== '');
