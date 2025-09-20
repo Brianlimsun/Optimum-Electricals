@@ -11,7 +11,11 @@ const getBasename = () => {
     return '/'
   }
   // If we're on GitHub Pages, use the repository path
-  return '/Optimum-Electricals/'
+  if (window.location.hostname === 'brianlimsun.github.io') {
+    return '/Optimum-Electricals/'
+  }
+  // For local development, use root path
+  return '/'
 }
 
 createRoot(document.getElementById('root')!).render(

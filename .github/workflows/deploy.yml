@@ -37,7 +37,6 @@ jobs:
       run: npm run build
       env:
         VITE_APPS_SCRIPT_WEBHOOK: ${{ secrets.VITE_APPS_SCRIPT_WEBHOOK }}
-        VITE_CUSTOM_DOMAIN: 'true'
         
     - name: Setup Pages
       uses: actions/configure-pages@v4

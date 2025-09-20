@@ -139,7 +139,7 @@ function getOrCreateSheet() {
       'Image Count',
       'Image Names',
       'Payment Screenshot Name',
-      'Image Link/Folder Link',
+      'Image Links',
       'Payment Screenshot Link'
     ];
     
@@ -191,94 +191,25 @@ function prepareRowData(data) {
 }
 
 /**
- * Save images to Google Drive and return appropriate link(s)
- * For single image: returns direct file link
- * For multiple images: creates folder and returns folder link
+ * Save images to Google Drive and return file links
  */
 function saveImagesToDrive(images, customerName, customerPhone) {
   if (!images || images.length === 0) return [];
   
-  // Create main booking folder
-  const mainFolderName = `Optimum Electricals Bookings`;
-  let mainFolder;
+  const folderName = `Optimum Electricals Bookings/${customerName}_${customerPhone}`;
+  let folder;
   
   try {
-    // Try to get existing main folder
-    const folders = DriveApp.getFoldersByName(mainFolderName);
+    // Try to get existing folder
+    const folders = DriveApp.getFoldersByName(folderName);
     if (folders.hasNext()) {
-      mainFolder = folders.next();
+      folder = folders.next();
     } else {
-      // Create new main folder
-      mainFolder = DriveApp.createFolder(mainFolderName);
+      // Create new folder
+      folder = DriveApp.createFolder(folderName);
     }
   } catch (error) {
-    console.error('Error creating main folder:', error);
-    return [];
-  }
-  
-  // Handle single image - save directly to main folder and return file link
-  if (images.length === 1) {
-    try {
-      const image = images[0];
-      
-      // Check if image data is valid
-      if (!image.data || typeof image.data !== 'string') {
-        console.error('Single image has invalid data:', image);
-        return [];
-      }
-      
-      // Convert base64 to blob
-      const base64Data = image.data.replace(/^data:image\/[a-z]+;base64,/, '');
-      
-      // Validate base64 data
-      if (!base64Data || base64Data.length === 0) {
-        console.error('Single image has empty base64 data');
-        return [];
-      }
-      
-      // Try to decode base64
-      let decodedData;
-      try {
-        decodedData = Utilities.base64Decode(base64Data);
-      } catch (decodeError) {
-        console.error('Single image base64 decode error:', decodeError);
-        return [];
-      }
-      
-      const blob = Utilities.newBlob(decodedData, 'image/jpeg', image.name);
-      
-      // Save directly to main folder
-      const file = mainFolder.createFile(blob);
-      
-      // Make file publicly viewable
-      file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-      
-      // Get file link
-      const fileLink = file.getUrl();
-      
-      console.log(`Single image saved: ${fileLink}`);
-      return [fileLink]; // Return array with single file link
-    } catch (error) {
-      console.error('Error saving single image:', error);
-      return [];
-    }
-  }
-  
-  // Handle multiple images - create customer folder and return folder link
-  const customerFolderName = `${customerName}_${customerPhone}`;
-  let customerFolder;
-  
-  try {
-    // Try to get existing customer folder within main folder
-    const customerFolders = mainFolder.getFoldersByName(customerFolderName);
-    if (customerFolders.hasNext()) {
-      customerFolder = customerFolders.next();
-    } else {
-      // Create new customer folder
-      customerFolder = mainFolder.createFolder(customerFolderName);
-    }
-  } catch (error) {
-    console.error('Error creating customer folder:', error);
+    console.error('Error creating folder:', error);
     return [];
   }
   
@@ -312,8 +243,8 @@ function saveImagesToDrive(images, customerName, customerPhone) {
       
       const blob = Utilities.newBlob(decodedData, 'image/jpeg', image.name);
       
-      // Save to customer folder
-      const file = customerFolder.createFile(blob);
+      // Save to Drive
+      const file = folder.createFile(blob);
       
       // Make file publicly viewable
       file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
@@ -328,158 +259,18 @@ function saveImagesToDrive(images, customerName, customerPhone) {
     }
   });
   
-  // For multiple images, make the folder publicly viewable and return folder link
-  if (fileLinks.length > 0) {
-    customerFolder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-    const folderLink = customerFolder.getUrl();
-    console.log(`Multiple images saved to folder: ${folderLink}`);
-    return [folderLink]; // Return array with single folder link
-  }
-  
-  return [];
+  return fileLinks;
 }
 
 /**
- * Function to handle GET requests
+ * Function to handle GET requests (for testing)
  */
 function doGet(e) {
-  try {
-    // Check if this is a request for available time slots
-    if (e && e.parameter && e.parameter.action === 'getAvailableTimeSlots') {
-      const date = e.parameter.date;
-      if (!date) {
-        return createResponse({
-          success: false,
-          error: 'Date parameter is required'
-        });
-      }
-      
-      return getAvailableTimeSlots(date);
-    }
-    
-    // Default response
-    return createResponse({
-      message: 'Optimum Electricals Booking API is running',
-      timestamp: new Date().toISOString(),
-      method: 'GET'
-    });
-  } catch (error) {
-    console.error('Error in doGet:', error);
-    return createResponse({
-      success: false,
-      error: error.toString()
-    });
-  }
-}
-
-/**
- * Get available time slots for a specific date
- */
-function getAvailableTimeSlots(date) {
-  try {
-    const sheet = getOrCreateSheet();
-    const data = sheet.getDataRange().getValues();
-    
-    // Skip header row
-    const bookings = data.slice(1);
-    
-    // All possible time slots
-    const allTimeSlots = [
-      '08:00-10:00',
-      '10:00-12:00',
-      '12:00-14:00',
-      '14:00-16:00',
-      '16:00-18:00',
-      '18:00-20:00',
-    ];
-    
-    // Find column indices
-    const headers = data[0];
-    const dateIndex = headers.indexOf('Booking Date');
-    const timeSlotIndex = headers.indexOf('Preferred Time Slot');
-    
-    if (dateIndex === -1 || timeSlotIndex === -1) {
-      return createResponse({
-        success: false,
-        error: 'Required columns not found in sheet'
-      });
-    }
-    
-    // Get booked time slots for the specified date
-    const debugInfo = {
-      lookingForDate: date,
-      headers: headers,
-      dateIndex: dateIndex,
-      timeSlotIndex: timeSlotIndex,
-      allBookingDates: bookings.map(row => ({ 
-        date: row[dateIndex], 
-        timeSlot: row[timeSlotIndex],
-        dateType: typeof row[dateIndex],
-        dateValue: row[dateIndex],
-        fullRow: row
-      }))
-    };
-    
-    const bookedTimeSlots = bookings
-      .filter(row => {
-        const rowDate = row[dateIndex];
-        
-        // Handle both string dates and Date objects
-        let rowDateString;
-        if (rowDate instanceof Date) {
-          // Convert to India timezone (UTC+5:30)
-          const indiaTime = new Date(rowDate.getTime() + (5.5 * 60 * 60 * 1000));
-          rowDateString = indiaTime.toISOString().split('T')[0];
-        } else if (typeof rowDate === 'string') {
-          // If it's a string, try to parse it as a date first
-          const parsedDate = new Date(rowDate);
-          if (!isNaN(parsedDate.getTime())) {
-            // Convert to India timezone (UTC+5:30)
-            const indiaTime = new Date(parsedDate.getTime() + (5.5 * 60 * 60 * 1000));
-            rowDateString = indiaTime.toISOString().split('T')[0];
-          } else {
-            rowDateString = rowDate.split('T')[0]; // In case it's a string with time
-          }
-        } else {
-          rowDateString = String(rowDate);
-        }
-        
-        // Add debugging for date conversion
-        debugInfo.dateConversions = debugInfo.dateConversions || [];
-        debugInfo.dateConversions.push({
-          original: rowDate,
-          converted: rowDateString,
-          target: date,
-          match: rowDateString === date
-        });
-        
-        return rowDateString === date;
-      })
-      .map(row => row[timeSlotIndex])
-      .filter(slot => slot && slot.trim() !== '');
-    
-    debugInfo.foundBookedTimeSlots = bookedTimeSlots;
-    
-    // Find available time slots
-    const availableTimeSlots = allTimeSlots.filter(slot => !bookedTimeSlots.includes(slot));
-    
-    return createResponse({
-      success: true,
-      date: date,
-      allTimeSlots: allTimeSlots,
-      bookedTimeSlots: bookedTimeSlots,
-      availableTimeSlots: availableTimeSlots,
-      debugInfo: debugInfo,
-      timestamp: new Date().toISOString()
-    });
-    
-  } catch (error) {
-    console.error('Error getting available time slots:', error);
-    return createResponse({
-      success: false,
-      error: error.toString()
-    });
-  }
+  return createResponse({
+    message: 'Optimum Electricals Booking API is running',
+    timestamp: new Date().toISOString(),
+    method: 'GET'
+  });
 }
 
 /**
@@ -512,25 +303,6 @@ function testSetup() {
   } catch (error) {
     console.error('Test failed:', error);
     return 'Test failed: ' + error.toString();
-  }
-}
-
-/**
- * Test function to check available time slots
- */
-function testTimeSlots() {
-  try {
-    // Test with today's date
-    const today = new Date().toISOString().split('T')[0];
-    console.log('Testing time slots for date:', today);
-    
-    const result = getAvailableTimeSlots(today);
-    console.log('Time slots result:', result);
-    
-    return 'Time slots test completed. Check logs for details.';
-  } catch (error) {
-    console.error('Time slots test failed:', error);
-    return 'Time slots test failed: ' + error.toString();
   }
 }
 
