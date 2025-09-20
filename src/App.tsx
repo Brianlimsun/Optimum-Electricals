@@ -3,13 +3,11 @@ import LeadCapture from './pages/LeadCapture'
 import BookingForm from './pages/BookingForm'
 import PaymentConfirmation from './pages/PaymentConfirmation'
 import MyBookings from './pages/MyBookings'
-import ScrollToTop from './components/ScrollToTop'
 import './App.css'
 
 function App() {
   return (
     <div className="app-container">
-      <ScrollToTop />
       <main className="app-main">
         <Routes>
           <Route path="/" element={<LeadCapture />} />

@@ -38,9 +38,6 @@ jobs:
       env:
         VITE_APPS_SCRIPT_WEBHOOK: ${{ secrets.VITE_APPS_SCRIPT_WEBHOOK }}
         
-    - name: Add .nojekyll file
-      run: touch dist/.nojekyll
-        
     - name: Setup Pages
       uses: actions/configure-pages@v4
       
