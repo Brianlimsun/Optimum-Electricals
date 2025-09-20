@@ -41,7 +41,7 @@ function LeadCapture() {
     <div className="lead-capture">
       <div className="icon" style={{ width: 80, height: 80, background: 'transparent', boxShadow: 'none', padding: 0 }}>
         <img
-          src="/logo.png"
+          src="/Optimum-Electricals/logo.png"
           alt="Optimum Electricals"
           style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover', display: 'block' }}
         />
