@@ -406,10 +406,19 @@ function getAvailableTimeSlots(date) {
     }
     
     // Get booked time slots for the specified date
+    console.log('Looking for date:', date);
+    console.log('All booking dates in sheet:', bookings.map(row => ({ date: row[dateIndex], timeSlot: row[timeSlotIndex] })));
+    
     const bookedTimeSlots = bookings
-      .filter(row => row[dateIndex] === date)
+      .filter(row => {
+        const rowDate = row[dateIndex];
+        console.log('Comparing:', rowDate, '===', date, 'Result:', rowDate === date);
+        return rowDate === date;
+      })
       .map(row => row[timeSlotIndex])
       .filter(slot => slot && slot.trim() !== '');
+    
+    console.log('Found booked time slots:', bookedTimeSlots);
     
     // Find available time slots
     const availableTimeSlots = allTimeSlots.filter(slot => !bookedTimeSlots.includes(slot));
