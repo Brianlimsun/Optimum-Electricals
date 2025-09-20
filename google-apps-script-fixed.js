@@ -340,14 +340,96 @@ function saveImagesToDrive(images, customerName, customerPhone) {
 }
 
 /**
- * Function to handle GET requests (for testing)
+ * Function to handle GET requests
  */
 function doGet(e) {
-  return createResponse({
-    message: 'Optimum Electricals Booking API is running',
-    timestamp: new Date().toISOString(),
-    method: 'GET'
-  });
+  try {
+    // Check if this is a request for available time slots
+    if (e.parameter && e.parameter.action === 'getAvailableTimeSlots') {
+      const date = e.parameter.date;
+      if (!date) {
+        return createResponse({
+          success: false,
+          error: 'Date parameter is required'
+        });
+      }
+      
+      return getAvailableTimeSlots(date);
+    }
+    
+    // Default response
+    return createResponse({
+      message: 'Optimum Electricals Booking API is running',
+      timestamp: new Date().toISOString(),
+      method: 'GET'
+    });
+  } catch (error) {
+    console.error('Error in doGet:', error);
+    return createResponse({
+      success: false,
+      error: error.toString()
+    });
+  }
+}
+
+/**
+ * Get available time slots for a specific date
+ */
+function getAvailableTimeSlots(date) {
+  try {
+    const sheet = getOrCreateSheet();
+    const data = sheet.getDataRange().getValues();
+    
+    // Skip header row
+    const bookings = data.slice(1);
+    
+    // All possible time slots
+    const allTimeSlots = [
+      '08:00-10:00',
+      '10:00-12:00',
+      '12:00-14:00',
+      '14:00-16:00',
+      '16:00-18:00',
+      '18:00-20:00',
+    ];
+    
+    // Find column indices
+    const headers = data[0];
+    const dateIndex = headers.indexOf('Booking Date');
+    const timeSlotIndex = headers.indexOf('Preferred Time Slot');
+    
+    if (dateIndex === -1 || timeSlotIndex === -1) {
+      return createResponse({
+        success: false,
+        error: 'Required columns not found in sheet'
+      });
+    }
+    
+    // Get booked time slots for the specified date
+    const bookedTimeSlots = bookings
+      .filter(row => row[dateIndex] === date)
+      .map(row => row[timeSlotIndex])
+      .filter(slot => slot && slot.trim() !== '');
+    
+    // Find available time slots
+    const availableTimeSlots = allTimeSlots.filter(slot => !bookedTimeSlots.includes(slot));
+    
+    return createResponse({
+      success: true,
+      date: date,
+      allTimeSlots: allTimeSlots,
+      bookedTimeSlots: bookedTimeSlots,
+      availableTimeSlots: availableTimeSlots,
+      timestamp: new Date().toISOString()
+    });
+    
+  } catch (error) {
+    console.error('Error getting available time slots:', error);
+    return createResponse({
+      success: false,
+      error: error.toString()
+    });
+  }
 }
 
 /**
