@@ -139,7 +139,7 @@ function getOrCreateSheet() {
       'Image Count',
       'Image Names',
       'Payment Screenshot Name',
-      'Image Links',
+      'Image Link/Folder Link',
       'Payment Screenshot Link'
     ];
     
@@ -191,25 +191,94 @@ function prepareRowData(data) {
 }
 
 /**
- * Save images to Google Drive and return file links
+ * Save images to Google Drive and return appropriate link(s)
+ * For single image: returns direct file link
+ * For multiple images: creates folder and returns folder link
  */
 function saveImagesToDrive(images, customerName, customerPhone) {
   if (!images || images.length === 0) return [];
   
-  const folderName = `Optimum Electricals Bookings/${customerName}_${customerPhone}`;
-  let folder;
+  // Create main booking folder
+  const mainFolderName = `Optimum Electricals Bookings`;
+  let mainFolder;
   
   try {
-    // Try to get existing folder
-    const folders = DriveApp.getFoldersByName(folderName);
+    // Try to get existing main folder
+    const folders = DriveApp.getFoldersByName(mainFolderName);
     if (folders.hasNext()) {
-      folder = folders.next();
+      mainFolder = folders.next();
     } else {
-      // Create new folder
-      folder = DriveApp.createFolder(folderName);
+      // Create new main folder
+      mainFolder = DriveApp.createFolder(mainFolderName);
     }
   } catch (error) {
-    console.error('Error creating folder:', error);
+    console.error('Error creating main folder:', error);
+    return [];
+  }
+  
+  // Handle single image - save directly to main folder and return file link
+  if (images.length === 1) {
+    try {
+      const image = images[0];
+      
+      // Check if image data is valid
+      if (!image.data || typeof image.data !== 'string') {
+        console.error('Single image has invalid data:', image);
+        return [];
+      }
+      
+      // Convert base64 to blob
+      const base64Data = image.data.replace(/^data:image\/[a-z]+;base64,/, '');
+      
+      // Validate base64 data
+      if (!base64Data || base64Data.length === 0) {
+        console.error('Single image has empty base64 data');
+        return [];
+      }
+      
+      // Try to decode base64
+      let decodedData;
+      try {
+        decodedData = Utilities.base64Decode(base64Data);
+      } catch (decodeError) {
+        console.error('Single image base64 decode error:', decodeError);
+        return [];
+      }
+      
+      const blob = Utilities.newBlob(decodedData, 'image/jpeg', image.name);
+      
+      // Save directly to main folder
+      const file = mainFolder.createFile(blob);
+      
+      // Make file publicly viewable
+      file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+      
+      // Get file link
+      const fileLink = file.getUrl();
+      
+      console.log(`Single image saved: ${fileLink}`);
+      return [fileLink]; // Return array with single file link
+    } catch (error) {
+      console.error('Error saving single image:', error);
+      return [];
+    }
+  }
+  
+  // Handle multiple images - create customer folder and return folder link
+  const customerFolderName = `${customerName}_${customerPhone}`;
+  let customerFolder;
+  
+  try {
+    // Try to get existing customer folder within main folder
+    const customerFolders = mainFolder.getFoldersByName(customerFolderName);
+    if (customerFolders.hasNext()) {
+      customerFolder = customerFolders.next();
+    } else {
+      // Create new customer folder
+      customerFolder = mainFolder.createFolder(customerFolderName);
+    }
+  } catch (error) {
+    console.error('Error creating customer folder:', error);
     return [];
   }
   
@@ -243,8 +312,8 @@ function saveImagesToDrive(images, customerName, customerPhone) {
       
       const blob = Utilities.newBlob(decodedData, 'image/jpeg', image.name);
       
-      // Save to Drive
-      const file = folder.createFile(blob);
+      // Save to customer folder
+      const file = customerFolder.createFile(blob);
       
       // Make file publicly viewable
       file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
@@ -259,7 +328,15 @@ function saveImagesToDrive(images, customerName, customerPhone) {
     }
   });
   
-  return fileLinks;
+  // For multiple images, make the folder publicly viewable and return folder link
+  if (fileLinks.length > 0) {
+    customerFolder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    const folderLink = customerFolder.getUrl();
+    console.log(`Multiple images saved to folder: ${folderLink}`);
+    return [folderLink]; // Return array with single folder link
+  }
+  
+  return [];
 }
 
 /**
