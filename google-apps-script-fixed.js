@@ -345,7 +345,7 @@ function saveImagesToDrive(images, customerName, customerPhone) {
 function doGet(e) {
   try {
     // Check if this is a request for available time slots
-    if (e.parameter && e.parameter.action === 'getAvailableTimeSlots') {
+    if (e && e.parameter && e.parameter.action === 'getAvailableTimeSlots') {
       const date = e.parameter.date;
       if (!date) {
         return createResponse({
@@ -462,6 +462,25 @@ function testSetup() {
   } catch (error) {
     console.error('Test failed:', error);
     return 'Test failed: ' + error.toString();
+  }
+}
+
+/**
+ * Test function to check available time slots
+ */
+function testTimeSlots() {
+  try {
+    // Test with today's date
+    const today = new Date().toISOString().split('T')[0];
+    console.log('Testing time slots for date:', today);
+    
+    const result = getAvailableTimeSlots(today);
+    console.log('Time slots result:', result);
+    
+    return 'Time slots test completed. Check logs for details.';
+  } catch (error) {
+    console.error('Time slots test failed:', error);
+    return 'Time slots test failed: ' + error.toString();
   }
 }
 
