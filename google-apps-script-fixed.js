@@ -427,15 +427,16 @@ function getAvailableTimeSlots(date) {
         // Handle both string dates and Date objects
         let rowDateString;
         if (rowDate instanceof Date) {
-          // Convert to local date string to handle timezone properly
-          const localDate = new Date(rowDate.getTime() + (rowDate.getTimezoneOffset() * 60000));
-          rowDateString = localDate.toISOString().split('T')[0];
+          // Convert to India timezone (UTC+5:30)
+          const indiaTime = new Date(rowDate.getTime() + (5.5 * 60 * 60 * 1000));
+          rowDateString = indiaTime.toISOString().split('T')[0];
         } else if (typeof rowDate === 'string') {
           // If it's a string, try to parse it as a date first
           const parsedDate = new Date(rowDate);
           if (!isNaN(parsedDate.getTime())) {
-            const localDate = new Date(parsedDate.getTime() + (parsedDate.getTimezoneOffset() * 60000));
-            rowDateString = localDate.toISOString().split('T')[0];
+            // Convert to India timezone (UTC+5:30)
+            const indiaTime = new Date(parsedDate.getTime() + (5.5 * 60 * 60 * 1000));
+            rowDateString = indiaTime.toISOString().split('T')[0];
           } else {
             rowDateString = rowDate.split('T')[0]; // In case it's a string with time
           }
