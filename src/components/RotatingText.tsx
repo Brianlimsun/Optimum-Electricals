@@ -72,19 +72,19 @@ const RotatingText = forwardRef<any, RotatingTextProps>((props, ref) => {
       }));
     }
     if (splitBy === 'words') {
-      return currentText.split(' ').map((word, i, arr) => ({
+      return currentText.split(' ').map((word: string, i: number, arr: string[]) => ({
         characters: [word],
         needsSpace: i !== arr.length - 1
       }));
     }
     if (splitBy === 'lines') {
-      return currentText.split('\n').map((line, i, arr) => ({
+      return currentText.split('\n').map((line: string, i: number, arr: string[]) => ({
         characters: [line],
         needsSpace: i !== arr.length - 1
       }));
     }
 
-    return currentText.split(splitBy).map((part, i, arr) => ({
+    return currentText.split(splitBy).map((part: string, i: number, arr: string[]) => ({
       characters: [part],
       needsSpace: i !== arr.length - 1
     }));
