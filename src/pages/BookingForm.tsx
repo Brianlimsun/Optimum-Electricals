@@ -92,25 +92,39 @@ function BookingForm() {
   // Function to check available time slots from Google Sheets
   const checkAvailableTimeSlots = async (date: string) => {
     if (!date) {
+      console.log('No date provided, showing all slots')
       setAvailableTimeSlots(allTimeSlots)
       return
     }
 
     setLoadingTimeSlots(true)
+    console.log('🔍 Checking time slots for date:', date)
+    
     try {
       // Get webhook URL from environment
       const webhookUrl = import.meta.env.VITE_APPS_SCRIPT_WEBHOOK
+      console.log('🌐 Webhook URL configured:', !!webhookUrl)
+      console.log('🔗 Webhook URL:', webhookUrl)
+      
       if (!webhookUrl) {
-        console.error('Google Apps Script Webhook URL is not configured')
+        console.error('❌ Google Apps Script Webhook URL is not configured')
+        console.log('📋 Falling back to showing all slots as available')
         setAvailableTimeSlots(allTimeSlots)
         return
       }
       
+      const apiUrl = `${webhookUrl}?action=getAvailableTimeSlots&date=${encodeURIComponent(date)}`
+      console.log('🚀 Making API call to:', apiUrl)
+      
       // Fetch available time slots from Google Sheets
-      const response = await fetch(`${webhookUrl}?action=getAvailableTimeSlots&date=${encodeURIComponent(date)}`)
+      const response = await fetch(apiUrl)
+      console.log('📡 Response status:', response.status, response.statusText)
+      
       const data = await response.json()
+      console.log('📊 API Response:', data)
       
       if (data.success) {
+        console.log('✅ Successfully fetched time slots:', data.availableTimeSlots)
         setAvailableTimeSlots(data.availableTimeSlots || [])
         
         // If current selection is no longer available, clear it
@@ -118,12 +132,14 @@ function BookingForm() {
           setTimeSlot('')
         }
       } else {
-        console.error('Error fetching time slots:', data.error)
+        console.error('❌ API returned error:', data.error)
+        console.log('📋 Falling back to showing all slots as available')
         // Fallback to showing all slots if API fails
         setAvailableTimeSlots(allTimeSlots)
       }
     } catch (error) {
-      console.error('Error checking time slots:', error)
+      console.error('❌ Error checking time slots:', error)
+      console.log('📋 Falling back to showing all slots as available')
       // Fallback to showing all slots if API fails
       setAvailableTimeSlots(allTimeSlots)
     } finally {
