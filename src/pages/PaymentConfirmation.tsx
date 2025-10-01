@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { CheckCircle, Upload, CreditCard } from 'lucide-react'
 
 interface PaymentData {
@@ -26,6 +26,7 @@ function PaymentConfirmation() {
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
   // Compress an image file to a data URL (JPEG) for faster uploads
   function compressImage(file: File, maxSize = 1200, quality = 0.7): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -53,7 +54,7 @@ function PaymentConfirmation() {
   }
 
   const handleCopyUpi = async () => {
-    const upi = 'nathpuhil21@oksbi'
+    const upi = '6033389808@okbizaxis'
     try {
       if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
         await navigator.clipboard.writeText(upi)
@@ -81,6 +82,13 @@ function PaymentConfirmation() {
 
 
   useEffect(() => {
+    // Scroll to top immediately when component mounts
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'auto'
+    })
+    
     // Get payment data from sessionStorage (passed from booking form)
     const storedData = sessionStorage.getItem('bookingData')
     if (storedData) {
@@ -177,10 +185,62 @@ function PaymentConfirmation() {
 
   if (!paymentData) {
     return (
-      <div className="payment-confirmation">
-        <div className="error-message">
-          <p>No booking data found. Please complete the booking form first.</p>
-          <button onClick={() => navigate('/booking')} className="back-link">← Back to Booking</button>
+      <div className="page-container">
+        <header className="hero-nav">
+          <div className="nav-pill">
+            <a 
+              href="/" 
+              className="brand-pill"
+              onClick={(e) => {
+                e.preventDefault()
+                if (window.location.pathname === '/') {
+                  window.location.reload()
+                } else {
+                  window.location.href = '/'
+                }
+              }}
+            >
+              <img src="/logo.png" alt="Optimum Electricals" className="brand-icon" />
+              <span className="brand-text">Optimum Electricals</span>
+            </a>
+            <nav className="nav-links">
+              <Link to="/privacy-policy" className="nav-link">Privacy Policy</Link>
+            </nav>
+            <button className="hamburger" aria-label="Open Menu" onClick={() => setMenuOpen((v) => !v)}>
+              <span />
+              <span />
+              <span />
+            </button>
+          </div>
+          {menuOpen && (
+            <div className="mobile-menu" onClick={() => setMenuOpen(false)}>
+              <Link to="/privacy-policy" className="mobile-link">Privacy Policy</Link>
+            </div>
+          )}
+        </header>
+
+        <div className="payment-confirmation">
+          <div className="error-container">
+            <div className="error-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="15" y1="9" x2="9" y2="15"/>
+                <line x1="9" y1="9" x2="15" y2="15"/>
+              </svg>
+            </div>
+            <h2 className="error-title">No Booking Found</h2>
+            <p className="error-description">
+              It looks like you haven't completed a booking yet. Please fill out the booking form first to proceed with payment.
+            </p>
+            <div className="error-actions">
+              <button onClick={() => navigate('/booking')} className="btn btn-primary">
+                Start Booking
+              </button>
+              <button onClick={() => navigate('/')} className="btn btn-secondary">
+                Go Home
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -188,61 +248,119 @@ function PaymentConfirmation() {
 
   if (success) {
     return (
-      <div className="payment-confirmation">
-        <div className="success-container">
-          <div className="success-icon">
-            <CheckCircle className="w-16 h-16" />
+      <div className="page-container">
+        <header className="hero-nav">
+          <div className="nav-pill">
+            <a 
+              href="/" 
+              className="brand-pill"
+              onClick={(e) => {
+                e.preventDefault()
+                if (window.location.pathname === '/') {
+                  window.location.reload()
+                } else {
+                  window.location.href = '/'
+                }
+              }}
+            >
+              <img src="/logo.png" alt="Optimum Electricals" className="brand-icon" />
+              <span className="brand-text">Optimum Electricals</span>
+            </a>
+            <nav className="nav-links">
+              <Link to="/privacy-policy" className="nav-link">Privacy Policy</Link>
+            </nav>
+            <button className="hamburger" aria-label="Open Menu" onClick={() => setMenuOpen((v) => !v)}>
+              <span />
+              <span />
+              <span />
+            </button>
           </div>
-          <h1>Payment Confirmed!</h1>
-          <p className="success-message">
-            Thank you for your payment! Your booking has been confirmed.
-          </p>
-          <div className="confirmation-details">
-            <h3>Booking Details:</h3>
-            <div className="detail-item">
-              <span className="label">Customer:</span>
-              <span className="value">{paymentData.customerName}</span>
+          {menuOpen && (
+            <div className="mobile-menu" onClick={() => setMenuOpen(false)}>
+              <Link to="/privacy-policy" className="mobile-link">Privacy Policy</Link>
             </div>
-            <div className="detail-item">
-              <span className="label">Phone:</span>
-              <span className="value">{paymentData.customerPhone}</span>
+          )}
+        </header>
+
+        <div className="payment-confirmation">
+          <div className="success-container">
+            <div className="success-icon">
+              <CheckCircle className="w-16 h-16" />
             </div>
-            <div className="detail-item">
-              <span className="label">Location:</span>
-              <span className="value">{paymentData.locality}, {paymentData.fullAddress}</span>
+            <h1>Payment Confirmed!</h1>
+            <p className="success-message">
+              Thank you for your payment! Your booking has been confirmed.
+            </p>
+            <div className="confirmation-details">
+              <h3>Booking Details:</h3>
+              <div className="detail-item">
+                <span className="label">Customer:</span>
+                <span className="value">{paymentData.customerName}</span>
+              </div>
+              <div className="detail-item">
+                <span className="label">Phone:</span>
+                <span className="value">{paymentData.customerPhone}</span>
+              </div>
+              <div className="detail-item">
+                <span className="label">Location:</span>
+                <span className="value">{paymentData.locality}, {paymentData.fullAddress}</span>
+              </div>
+              <div className="detail-item">
+                <span className="label">Date & Time:</span>
+                <span className="value">{paymentData.bookingDate} - {paymentData.preferredTimeSlot}</span>
+              </div>
+              <div className="detail-item">
+                <span className="label">Amount Paid:</span>
+                <span className="value">₹{paymentData.totalFee}</span>
+              </div>
             </div>
-            <div className="detail-item">
-              <span className="label">Date & Time:</span>
-              <span className="value">{paymentData.bookingDate} - {paymentData.preferredTimeSlot}</span>
+            <div className="next-steps">
+              <h3>What's Next?</h3>
+              <p>Our team will contact you shortly to confirm your appointment and provide any additional details.</p>
+              <p>You can expect a call within 30 minutes during business hours.</p>
             </div>
-            <div className="detail-item">
-              <span className="label">Amount Paid:</span>
-              <span className="value">₹{paymentData.totalFee}</span>
-            </div>
+            <button onClick={() => navigate('/')} className="home-link">← Back to Home</button>
           </div>
-          <div className="next-steps">
-            <h3>What's Next?</h3>
-            <p>Our team will contact you shortly to confirm your appointment and provide any additional details.</p>
-            <p>You can expect a call within 30 minutes during business hours.</p>
-          </div>
-          <button onClick={() => navigate('/')} className="home-link">← Back to Home</button>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="payment-confirmation">
-      <div className="payment-header">
-        <button onClick={() => navigate('/booking')} className="back-link">←</button>
-        <div className="header-content">
-          <h1>
-            <span className="payment-text">Payment</span>
-            <span className="confirm-text"> Confirmation</span>
-          </h1>
-          <p className="greeting">Hi {paymentData.customerName}! Please complete your payment to confirm your booking.</p>
+    <div className="page-container">
+      <header className="hero-nav">
+        <div className="nav-pill">
+          <Link to="/" className="brand-pill">
+            <img src="/logo.png" alt="Optimum Electricals" className="brand-icon" />
+            <span className="brand-text">Optimum Electricals</span>
+          </Link>
+          <nav className="nav-links">
+            <Link to="/privacy-policy" className="nav-link">Privacy Policy</Link>
+          </nav>
+          <button className="hamburger" aria-label="Open Menu" onClick={() => setMenuOpen((v) => !v)}>
+            <span />
+            <span />
+            <span />
+          </button>
         </div>
-      </div>
+        {menuOpen && (
+          <div className="mobile-menu" onClick={() => setMenuOpen(false)}>
+            <a className="mobile-link" href="#">Privacy Policy</a>
+          </div>
+        )}
+      </header>
+
+      <div className="payment-confirmation">
+        <div className="payment-header">
+          <button onClick={() => navigate('/booking')} className="back-link">←</button>
+          <div className="header-content">
+            <h1>
+              <span className="payment-text">Payment</span>
+              <span className="confirm-text"> Confirmation</span>
+            </h1>
+            <p className="greeting">Hi {paymentData.customerName}! Please complete your payment to confirm your booking.</p>
+          </div>
+        </div>
 
       <div className="payment-content">
         <div className="booking-summary">
@@ -303,7 +421,7 @@ function PaymentConfirmation() {
               </div>
               <div className="upi-details">
                 <div className="upi-id-row">
-                  <span className="upi-id">UPI: nathpuhil21@oksbi</span>
+                  <span className="upi-id">UPI: 6033389808@okbizaxis</span>
                   <button type="button" className="copy-upi-btn" onClick={handleCopyUpi} aria-label="Copy UPI ID">
                     {copied ? 'Copied' : 'Copy'}
                   </button>
@@ -357,6 +475,7 @@ function PaymentConfirmation() {
           </button>
         </div>
       </div>
+    </div>
     </div>
   )
 }

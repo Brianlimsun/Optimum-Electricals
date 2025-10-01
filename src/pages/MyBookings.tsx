@@ -20,6 +20,7 @@ const STORAGE_KEY = 'optimum:bookings'
 function MyBookings() {
   const navigate = useNavigate()
   const [bookings, setBookings] = useState<StoredBooking[]>([])
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     try {
@@ -36,6 +37,99 @@ function MyBookings() {
 
   if (!bookings.length) {
     return (
+      <div className="page-container">
+        <header className="hero-nav">
+          <div className="nav-pill">
+            <a 
+              href="/" 
+              className="brand-pill"
+              onClick={(e) => {
+                e.preventDefault()
+                if (window.location.pathname === '/') {
+                  window.location.reload()
+                } else {
+                  window.location.href = '/'
+                }
+              }}
+            >
+              <img src="/logo.png" alt="Optimum Electricals" className="brand-icon" />
+              <span className="brand-text">Optimum Electricals</span>
+            </a>
+            <nav className="nav-links">
+              <a 
+                href="/privacy-policy" 
+                className="nav-link"
+                onClick={(e) => {
+                  e.preventDefault()
+                  window.location.href = '/privacy-policy'
+                }}
+              >
+                Privacy Policy
+              </a>
+            </nav>
+            <button className="hamburger" aria-label="Open Menu" onClick={() => setMenuOpen((v) => !v)}>
+              <span />
+              <span />
+              <span />
+            </button>
+          </div>
+          {menuOpen && (
+            <div className="mobile-menu" onClick={() => setMenuOpen(false)}>
+              <a 
+                href="/privacy-policy" 
+                className="mobile-link"
+                onClick={(e) => {
+                  e.preventDefault()
+                  window.location.href = '/privacy-policy'
+                }}
+              >
+                Privacy Policy
+              </a>
+            </div>
+          )}
+        </header>
+
+        <div className="booking-form">
+          <div className="booking-header">
+            <button onClick={() => navigate('/')} className="back-link">←</button>
+            <div className="header-content">
+              <h1>
+                <span className="book-text">My</span>
+                <span className="service-text"> Bookings</span>
+              </h1>
+              <p className="greeting">No bookings saved yet.</p>
+            </div>
+          </div>
+          <button onClick={() => navigate('/booking')} className="home-link">Book a Service</button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="page-container">
+      <header className="hero-nav">
+        <div className="nav-pill">
+          <div className="brand-pill">
+            <img src="public/logo.png" alt="Optimum Electricals" className="brand-icon" />
+            <span className="brand-text">Optimum Electricals</span>
+          </div>
+          <nav className="nav-links">
+            <a className="nav-link" href="#">Privacy Policy</a>
+          </nav>
+          <button className="hamburger" aria-label="Open Menu" onClick={() => setMenuOpen((v) => !v)}>
+            <span />
+            <span />
+            <span />
+          </button>
+        </div>
+        {menuOpen && (
+          <div className="mobile-menu" onClick={() => setMenuOpen(false)}>
+            <a className="mobile-link" href="#">Privacy Policy</a>
+          </div>
+        )}
+      </header>
+
       <div className="booking-form">
         <div className="booking-header">
           <button onClick={() => navigate('/')} className="back-link">←</button>
@@ -44,26 +138,9 @@ function MyBookings() {
               <span className="book-text">My</span>
               <span className="service-text"> Bookings</span>
             </h1>
-            <p className="greeting">No bookings saved yet.</p>
+            <p className="greeting">View details of your saved bookings.</p>
           </div>
         </div>
-        <button onClick={() => navigate('/booking')} className="home-link">Book a Service</button>
-      </div>
-    )
-  }
-
-  return (
-    <div className="booking-form">
-      <div className="booking-header">
-        <button onClick={() => navigate('/')} className="back-link">←</button>
-        <div className="header-content">
-          <h1>
-            <span className="book-text">My</span>
-            <span className="service-text"> Bookings</span>
-          </h1>
-          <p className="greeting">View details of your saved bookings.</p>
-        </div>
-      </div>
 
       {bookings.map((b) => (
         <div className="confirmation-details" key={b.id} style={{ marginBottom: 16 }}>
@@ -78,7 +155,8 @@ function MyBookings() {
         </div>
       ))}
 
-      <button onClick={() => navigate('/')} className="home-link">← Make another booking</button>
+        <button onClick={() => navigate('/')} className="home-link">← Make another booking</button>
+      </div>
     </div>
   )
 }

@@ -81,6 +81,17 @@ function doPost(e) {
     
     console.log('Data saved to sheet successfully');
     
+    // Send email notification
+    try {
+      console.log('Attempting to send email notification...');
+      sendBookingNotification(data, imageLinks, paymentScreenshotLink);
+      console.log('Email notification sent successfully');
+    } catch (emailError) {
+      console.error('Error sending email notification:', emailError);
+      console.error('Email error details:', emailError.toString());
+      // Don't fail the booking if email fails
+    }
+    
     // Return success response
     return createResponse({
       success: true,
@@ -139,7 +150,7 @@ function getOrCreateSheet() {
       'Image Count',
       'Image Names',
       'Payment Screenshot Name',
-      'Image Links',
+      'Image Link/Folder Link',
       'Payment Screenshot Link'
     ];
     
@@ -191,25 +202,94 @@ function prepareRowData(data) {
 }
 
 /**
- * Save images to Google Drive and return file links
+ * Save images to Google Drive and return appropriate link(s)
+ * For single image: returns direct file link
+ * For multiple images: creates folder and returns folder link
  */
 function saveImagesToDrive(images, customerName, customerPhone) {
   if (!images || images.length === 0) return [];
   
-  const folderName = `Optimum Electricals Bookings/${customerName}_${customerPhone}`;
-  let folder;
+  // Create main booking folder
+  const mainFolderName = `Optimum Electricals Bookings`;
+  let mainFolder;
   
   try {
-    // Try to get existing folder
-    const folders = DriveApp.getFoldersByName(folderName);
+    // Try to get existing main folder
+    const folders = DriveApp.getFoldersByName(mainFolderName);
     if (folders.hasNext()) {
-      folder = folders.next();
+      mainFolder = folders.next();
     } else {
-      // Create new folder
-      folder = DriveApp.createFolder(folderName);
+      // Create new main folder
+      mainFolder = DriveApp.createFolder(mainFolderName);
     }
   } catch (error) {
-    console.error('Error creating folder:', error);
+    console.error('Error creating main folder:', error);
+    return [];
+  }
+  
+  // Handle single image - save directly to main folder and return file link
+  if (images.length === 1) {
+    try {
+      const image = images[0];
+      
+      // Check if image data is valid
+      if (!image.data || typeof image.data !== 'string') {
+        console.error('Single image has invalid data:', image);
+        return [];
+      }
+      
+      // Convert base64 to blob
+      const base64Data = image.data.replace(/^data:image\/[a-z]+;base64,/, '');
+      
+      // Validate base64 data
+      if (!base64Data || base64Data.length === 0) {
+        console.error('Single image has empty base64 data');
+        return [];
+      }
+      
+      // Try to decode base64
+      let decodedData;
+      try {
+        decodedData = Utilities.base64Decode(base64Data);
+      } catch (decodeError) {
+        console.error('Single image base64 decode error:', decodeError);
+        return [];
+      }
+      
+      const blob = Utilities.newBlob(decodedData, 'image/jpeg', image.name);
+      
+      // Save directly to main folder
+      const file = mainFolder.createFile(blob);
+      
+      // Make file publicly viewable
+      file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+      
+      // Get file link
+      const fileLink = file.getUrl();
+      
+      console.log(`Single image saved: ${fileLink}`);
+      return [fileLink]; // Return array with single file link
+    } catch (error) {
+      console.error('Error saving single image:', error);
+      return [];
+    }
+  }
+  
+  // Handle multiple images - create customer folder and return folder link
+  const customerFolderName = `${customerName}_${customerPhone}`;
+  let customerFolder;
+  
+  try {
+    // Try to get existing customer folder within main folder
+    const customerFolders = mainFolder.getFoldersByName(customerFolderName);
+    if (customerFolders.hasNext()) {
+      customerFolder = customerFolders.next();
+    } else {
+      // Create new customer folder
+      customerFolder = mainFolder.createFolder(customerFolderName);
+    }
+  } catch (error) {
+    console.error('Error creating customer folder:', error);
     return [];
   }
   
@@ -243,8 +323,8 @@ function saveImagesToDrive(images, customerName, customerPhone) {
       
       const blob = Utilities.newBlob(decodedData, 'image/jpeg', image.name);
       
-      // Save to Drive
-      const file = folder.createFile(blob);
+      // Save to customer folder
+      const file = customerFolder.createFile(blob);
       
       // Make file publicly viewable
       file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
@@ -259,18 +339,160 @@ function saveImagesToDrive(images, customerName, customerPhone) {
     }
   });
   
-  return fileLinks;
+  // For multiple images, make the folder publicly viewable and return folder link
+  if (fileLinks.length > 0) {
+    customerFolder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    const folderLink = customerFolder.getUrl();
+    console.log(`Multiple images saved to folder: ${folderLink}`);
+    return [folderLink]; // Return array with single folder link
+  }
+  
+  return [];
 }
 
 /**
- * Function to handle GET requests (for testing)
+ * Function to handle GET requests
  */
 function doGet(e) {
-  return createResponse({
-    message: 'Optimum Electricals Booking API is running',
-    timestamp: new Date().toISOString(),
-    method: 'GET'
-  });
+  try {
+    // Check if this is a request for available time slots
+    if (e && e.parameter && e.parameter.action === 'getAvailableTimeSlots') {
+      const date = e.parameter.date;
+      if (!date) {
+        return createResponse({
+          success: false,
+          error: 'Date parameter is required'
+        });
+      }
+      
+      return getAvailableTimeSlots(date);
+    }
+    
+    // Default response
+    return createResponse({
+      message: 'Optimum Electricals Booking API is running',
+      timestamp: new Date().toISOString(),
+      method: 'GET'
+    });
+  } catch (error) {
+    console.error('Error in doGet:', error);
+    return createResponse({
+      success: false,
+      error: error.toString()
+    });
+  }
+}
+
+/**
+ * Get available time slots for a specific date
+ */
+function getAvailableTimeSlots(date) {
+  try {
+    const sheet = getOrCreateSheet();
+    const data = sheet.getDataRange().getValues();
+    
+    // Skip header row
+    const bookings = data.slice(1);
+    
+    // All possible time slots
+    const allTimeSlots = [
+      '10:00-11:00',
+      '11:00-12:00',
+      '12:00-13:00',
+      '13:00-14:00',
+      '14:00-15:00',
+      '15:00-16:00',
+      '16:00-17:00',
+      '17:00-18:00',
+    ];
+    
+    // Find column indices
+    const headers = data[0];
+    const dateIndex = headers.indexOf('Booking Date');
+    const timeSlotIndex = headers.indexOf('Preferred Time Slot');
+    
+    if (dateIndex === -1 || timeSlotIndex === -1) {
+      return createResponse({
+        success: false,
+        error: 'Required columns not found in sheet'
+      });
+    }
+    
+    // Get booked time slots for the specified date
+    const debugInfo = {
+      lookingForDate: date,
+      headers: headers,
+      dateIndex: dateIndex,
+      timeSlotIndex: timeSlotIndex,
+      allBookingDates: bookings.map(row => ({ 
+        date: row[dateIndex], 
+        timeSlot: row[timeSlotIndex],
+        dateType: typeof row[dateIndex],
+        dateValue: row[dateIndex],
+        fullRow: row
+      }))
+    };
+    
+    const bookedTimeSlots = bookings
+      .filter(row => {
+        const rowDate = row[dateIndex];
+        
+        // Handle both string dates and Date objects
+        let rowDateString;
+        if (rowDate instanceof Date) {
+          // Convert to India timezone (UTC+5:30)
+          const indiaTime = new Date(rowDate.getTime() + (5.5 * 60 * 60 * 1000));
+          rowDateString = indiaTime.toISOString().split('T')[0];
+        } else if (typeof rowDate === 'string') {
+          // If it's a string, try to parse it as a date first
+          const parsedDate = new Date(rowDate);
+          if (!isNaN(parsedDate.getTime())) {
+            // Convert to India timezone (UTC+5:30)
+            const indiaTime = new Date(parsedDate.getTime() + (5.5 * 60 * 60 * 1000));
+            rowDateString = indiaTime.toISOString().split('T')[0];
+          } else {
+            rowDateString = rowDate.split('T')[0]; // In case it's a string with time
+          }
+        } else {
+          rowDateString = String(rowDate);
+        }
+        
+        // Add debugging for date conversion
+        debugInfo.dateConversions = debugInfo.dateConversions || [];
+        debugInfo.dateConversions.push({
+          original: rowDate,
+          converted: rowDateString,
+          target: date,
+          match: rowDateString === date
+        });
+        
+        return rowDateString === date;
+      })
+      .map(row => row[timeSlotIndex])
+      .filter(slot => slot && slot.trim() !== '');
+    
+    debugInfo.foundBookedTimeSlots = bookedTimeSlots;
+    
+    // Find available time slots
+    const availableTimeSlots = allTimeSlots.filter(slot => !bookedTimeSlots.includes(slot));
+    
+    return createResponse({
+      success: true,
+      date: date,
+      allTimeSlots: allTimeSlots,
+      bookedTimeSlots: bookedTimeSlots,
+      availableTimeSlots: availableTimeSlots,
+      debugInfo: debugInfo,
+      timestamp: new Date().toISOString()
+    });
+    
+  } catch (error) {
+    console.error('Error getting available time slots:', error);
+    return createResponse({
+      success: false,
+      error: error.toString()
+    });
+  }
 }
 
 /**
@@ -303,6 +525,156 @@ function testSetup() {
   } catch (error) {
     console.error('Test failed:', error);
     return 'Test failed: ' + error.toString();
+  }
+}
+
+/**
+ * Test function to check available time slots
+ */
+function testTimeSlots() {
+  try {
+    // Test with today's date
+    const today = new Date().toISOString().split('T')[0];
+    console.log('Testing time slots for date:', today);
+    
+    const result = getAvailableTimeSlots(today);
+    console.log('Time slots result:', result);
+    
+    return 'Time slots test completed. Check logs for details.';
+  } catch (error) {
+    console.error('Time slots test failed:', error);
+    return 'Time slots test failed: ' + error.toString();
+  }
+}
+
+/**
+ * Send email notification for new booking
+ */
+function sendBookingNotification(bookingData, imageLinks, paymentScreenshotLink) {
+  try {
+    // Configuration - Update with your email
+    const NOTIFICATION_EMAIL = 'optimumbriansun@gmail.com'; // Change to your email
+    const BUSINESS_NAME = 'Optimum Electricals';
+    
+    // Format booking date
+    const bookingDate = new Date(bookingData.bookingDate).toLocaleDateString('en-IN', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    
+    // Create email subject
+    const subject = `🔔 New Booking - ${bookingData.customerName} (${bookingData.customerPhone})`;
+    
+    // Create email body
+    let emailBody = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="background: #1a1a1a; color: #ffffff; padding: 20px; border-radius: 8px;">
+        <h2 style="color: #FACC14; margin: 0 0 20px 0;">🔔 New Booking Received</h2>
+        
+        <div style="background: #2a2a2a; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+          <h3 style="color: #FACC14; margin: 0 0 10px 0;">Customer Details</h3>
+          <p style="margin: 5px 0;"><strong>Name:</strong> ${bookingData.customerName}</p>
+          <p style="margin: 5px 0;"><strong>Phone:</strong> ${bookingData.customerPhone}</p>
+          <p style="margin: 5px 0;"><strong>Locality:</strong> ${bookingData.locality}</p>
+          <p style="margin: 5px 0;"><strong>Address:</strong> ${bookingData.fullAddress}</p>
+        </div>
+        
+        <div style="background: #2a2a2a; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+          <h3 style="color: #FACC14; margin: 0 0 10px 0;">Service Details</h3>
+          <p style="margin: 5px 0;"><strong>Problem:</strong> ${bookingData.problemDescription}</p>
+          <p style="margin: 5px 0;"><strong>Date:</strong> ${bookingDate}</p>
+          <p style="margin: 5px 0;"><strong>Time Slot:</strong> ${bookingData.preferredTimeSlot}</p>
+          <p style="margin: 5px 0;"><strong>Urgent:</strong> ${bookingData.isUrgent ? 'Yes (+₹50)' : 'No'}</p>
+        </div>
+        
+        <div style="background: #2a2a2a; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+          <h3 style="color: #FACC14; margin: 0 0 10px 0;">Payment Details</h3>
+          <p style="margin: 5px 0;"><strong>Total Fee:</strong> ₹${bookingData.totalFee}</p>
+          <p style="margin: 5px 0;"><strong>Payment Status:</strong> ${bookingData.paymentConfirmedAt ? 'Confirmed' : 'Pending'}</p>
+        </div>
+    `;
+    
+    // Add image links if available
+    if (imageLinks && imageLinks.length > 0) {
+      emailBody += `
+        <div style="background: #2a2a2a; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+          <h3 style="color: #FACC14; margin: 0 0 10px 0;">Images</h3>
+          <p style="margin: 5px 0;">Customer uploaded ${imageLinks.length} image(s)</p>
+          ${imageLinks.map(link => `<p style="margin: 5px 0;"><a href="${link}" style="color: #FACC14;">View Images</a></p>`).join('')}
+        </div>
+      `;
+    }
+    
+    // Add payment screenshot if available
+    if (paymentScreenshotLink) {
+      emailBody += `
+        <div style="background: #2a2a2a; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+          <h3 style="color: #FACC14; margin: 0 0 10px 0;">Payment Screenshot</h3>
+          <p style="margin: 5px 0;"><a href="${paymentScreenshotLink}" style="color: #FACC14;">View Payment Screenshot</a></p>
+        </div>
+      `;
+    }
+    
+    emailBody += `
+        <div style="background: #2a2a2a; padding: 15px; border-radius: 6px;">
+          <h3 style="color: #FACC14; margin: 0 0 10px 0;">Next Steps</h3>
+          <p style="margin: 5px 0;">1. Contact customer to confirm appointment</p>
+          <p style="margin: 5px 0;">2. Prepare for service visit</p>
+          <p style="margin: 5px 0;">3. Update booking status in Google Sheets</p>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid #444;">
+          <p style="color: #888; font-size: 12px;">This is an automated notification from ${BUSINESS_NAME}</p>
+        </div>
+      </div>
+    </div>
+    `;
+    
+    // Send email
+    GmailApp.sendEmail(
+      NOTIFICATION_EMAIL,
+      subject,
+      '', // Plain text version (empty)
+      {
+        htmlBody: emailBody,
+        name: BUSINESS_NAME
+      }
+    );
+    
+    console.log('Email notification sent successfully');
+    
+  } catch (error) {
+    console.error('Error sending email notification:', error);
+    throw error;
+  }
+}
+
+/**
+ * Test function to send a test email
+ */
+function testEmail() {
+  try {
+    const testData = {
+      customerName: 'Test Customer',
+      customerPhone: '9876543210',
+      locality: 'Test Locality',
+      fullAddress: 'Test Address',
+      problemDescription: 'Test electrical issue',
+      bookingDate: '2024-01-15',
+      preferredTimeSlot: '10:00-11:00',
+      isUrgent: false,
+      totalFee: 100,
+      paymentConfirmedAt: new Date().toISOString()
+    };
+    
+    sendBookingNotification(testData, [], '');
+    console.log('Test email sent successfully');
+    return 'Test email sent successfully';
+  } catch (error) {
+    console.error('Test email failed:', error);
+    return 'Test email failed: ' + error.toString();
   }
 }
 

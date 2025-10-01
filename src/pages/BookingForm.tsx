@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { MapPin, Clock, Camera, CheckCircle } from 'lucide-react'
 
 type ImageItem = {
@@ -54,21 +54,39 @@ function BookingForm() {
   const [success, setSuccess] = useState<string | null>(null)
   const [availableTimeSlots, setAvailableTimeSlots] = useState<string[]>([])
   const [loadingTimeSlots, setLoadingTimeSlots] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   const localityOptions = [
-    { name: 'Rilbong', fee: 100 },
-    { name: 'Police Bazaar', fee: 200 },
-    { name: 'Laitumkhrah', fee: 200 },
-    { name: 'Other', fee: 200 }
+    { name: 'Bara Bazar', fee: 300 },
+    { name: 'Dhankheti', fee: 300 },
+    { name: 'Happy Valley', fee: 300 },
+    { name: 'Jalupara', fee: 300 },
+    { name: 'Kench Trace', fee: 300 },
+    { name: 'Laban', fee: 300 },
+    { name: 'Laitumkhrah', fee: 300 },
+    { name: 'Lapalang', fee: 300 },
+    { name: 'Lawsohtun', fee: 300 },
+    { name: 'Malki', fee: 300 },
+    { name: 'Mawlai', fee: 300 },
+    { name: 'Mawbah', fee: 300 },
+    { name: 'Mawprem', fee: 300 },
+    { name: 'Nongthymmai', fee: 300 },
+    { name: 'Police Bazaar', fee: 300 },
+    { name: 'Polo', fee: 300 },
+    { name: 'Rilbong', fee: 300 },
+    { name: 'Rynjah', fee: 300 },
+    { name: 'Other', fee: 300 }
   ]
 
   const allTimeSlots = [
-    '08:00-10:00',
-    '10:00-12:00',
-    '12:00-14:00',
-    '14:00-16:00',
-    '16:00-18:00',
-    '18:00-20:00',
+    '10:00-11:00',
+    '11:00-12:00',
+    '12:00-13:00',
+    '13:00-14:00',
+    '14:00-15:00',
+    '15:00-16:00',
+    '16:00-17:00',
+    '17:00-18:00',
   ]
 
   // Function to check available time slots from Google Sheets
@@ -87,7 +105,7 @@ function BookingForm() {
         setAvailableTimeSlots(allTimeSlots)
         return
       }
-
+      
       // Fetch available time slots from Google Sheets
       const response = await fetch(`${webhookUrl}?action=getAvailableTimeSlots&date=${encodeURIComponent(date)}`)
       const data = await response.json()
@@ -149,9 +167,19 @@ function BookingForm() {
   }, [bookingDate])
 
   const totalFee = useMemo(() => {
-    const localityFee = localityOptions.find(opt => opt.name === locality)?.fee || 0
+    const localityFee = 300 // Standard fee for all localities
     const urgentFee = isToday ? 50 : 0
-    return localityFee + urgentFee
+    const baseTotal = localityFee + urgentFee
+    
+    // Apply discounts
+    let discount = 0
+    if (locality === 'Rilbong') {
+      discount = 200 // Special discount for Rilbong
+    } else if (locality) {
+      discount = 100 // Standard discount for all other localities
+    }
+    
+    return Math.max(0, baseTotal - discount) // Ensure total doesn't go below 0
   }, [locality, isToday])
 
   function validate(): string | null {
@@ -267,17 +295,51 @@ function BookingForm() {
   }
 
   return (
-    <div className="booking-form">
-      <div className="booking-header">
-        <button onClick={() => navigate('/')} className="back-link">←</button>
-        <div className="header-content">
-          <h1>
-            <span className="book-text">Book</span>
-            <span className="service-text"> Your Service</span>
-          </h1>
-          <p className="greeting">Hi {name || 'there'}! Let's get your electrical issue resolved.</p>
+    <div className="page-container">
+      <header className="hero-nav">
+        <div className="nav-pill">
+          <a 
+            href="/" 
+            className="brand-pill"
+            onClick={(e) => {
+              e.preventDefault()
+              if (window.location.pathname === '/') {
+                window.location.reload()
+              } else {
+                window.location.href = '/'
+              }
+            }}
+          >
+            <img src="/logo.png" alt="Optimum Electricals" className="brand-icon" />
+            <span className="brand-text">Optimum Electricals</span>
+          </a>
+          <nav className="nav-links">
+            <Link to="/privacy-policy" className="nav-link">Privacy Policy</Link>
+          </nav>
+          <button className="hamburger" aria-label="Open Menu" onClick={() => setMenuOpen((v) => !v)}>
+            <span />
+            <span />
+            <span />
+          </button>
         </div>
-      </div>
+        {menuOpen && (
+          <div className="mobile-menu" onClick={() => setMenuOpen(false)}>
+            <Link to="/privacy-policy" className="mobile-link">Privacy Policy</Link>
+          </div>
+        )}
+      </header>
+
+      <div className="booking-form">
+        <div className="booking-header">
+          <button onClick={() => navigate('/')} className="back-link">←</button>
+          <div className="header-content">
+            <h1>
+              <span className="book-text">Book</span>
+              <span className="service-text"> Your Service</span>
+            </h1>
+            <p className="greeting">Hi {name || 'there'}! Let's get your electrical issue resolved.</p>
+          </div>
+        </div>
 
       {success && (
         <div className="success-message">
@@ -305,13 +367,13 @@ function BookingForm() {
                   <option value="">Select locality</option>
                   {localityOptions.map((option) => (
                     <option key={option.name} value={option.name}>
-                      {option.name} - ₹{option.fee}
+                      {option.name}
                     </option>
                   ))}
                 </select>
                 {locality && (
                   <div className="selected-locality">
-                    Selected: {locality} - ₹{localityOptions.find(opt => opt.name === locality)?.fee}
+                    Selected: {locality} - ₹300
                   </div>
                 )}
               </div>
@@ -346,10 +408,10 @@ function BookingForm() {
 
         {/* Booking Date */}
         <div className="form-group">
-          <label className="section-title">
+          <h3 className="section-title">
             <Clock className="icon" />
             <span>Booking Date *</span>
-          </label>
+          </h3>
           <input
             type="date"
             value={bookingDate}
@@ -365,11 +427,11 @@ function BookingForm() {
         </div>
 
         <div className="form-group">
-          <label className="section-title">
+          <h3 className="section-title">
             <Clock className="icon" />
             <span>Preferred Time Slot *</span>
             {loadingTimeSlots && <span className="loading-text">Checking availability...</span>}
-          </label>
+          </h3>
           <select 
             value={timeSlot} 
             onChange={(e) => setTimeSlot(e.target.value)}
@@ -406,10 +468,10 @@ function BookingForm() {
         </div>
 
         <div className="form-group">
-          <label className="section-title">
+          <h3 className="section-title">
             <Camera className="icon" />
             <span>Upload Photos of Issue (Optional - Max {MAX_IMAGES})</span>
-          </label>
+          </h3>
           <div className="image-upload">
             <input 
               type="file" 
@@ -448,12 +510,18 @@ function BookingForm() {
             <div className="fee-breakdown">
               <div className="fee-item">
                 <span>Locality Fee ({locality})</span>
-                <span>₹{localityOptions.find(opt => opt.name === locality)?.fee || 0}</span>
+                <span>₹300</span>
               </div>
               {isToday && (
                 <div className="fee-item urgent-fee">
                   <span>Urgent Same Day</span>
                   <span>₹50</span>
+                </div>
+              )}
+              {locality && (
+                <div className="fee-item discount">
+                  <span>Discount ({locality === 'Rilbong' ? 'Special' : 'Standard'})</span>
+                  <span>-₹{locality === 'Rilbong' ? '200' : '100'}</span>
                 </div>
               )}
               <div className="fee-total">
@@ -468,7 +536,7 @@ function BookingForm() {
           {submitting ? 'Processing…' : `Proceed to Payment${totalFee > 0 ? ` - ₹${totalFee}` : ''}`}
         </button>
       </form>
-
+      </div>
     </div>
   )
 }

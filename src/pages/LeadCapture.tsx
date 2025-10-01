@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { ArrowRight, CheckCircle, ClipboardList } from 'lucide-react'
 
 // Do not persist name/phone; require manual entry each time
@@ -10,6 +10,7 @@ function LeadCapture() {
   const [phone, setPhone] = useState('')
   const [errors, setErrors] = useState<{ name?: string; phone?: string }>({})
   const [hasBookings, setHasBookings] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     try {
@@ -38,20 +39,54 @@ function LeadCapture() {
   }
 
   return (
-    <div className="lead-capture">
-      <div className="icon" style={{ width: 80, height: 80, background: 'transparent', boxShadow: 'none', padding: 0 }}>
-        <img
-          src="/logo.png"
-          alt="Optimum Electricals"
-          style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover', display: 'block' }}
-        />
-      </div>
+    <div className="page-container">
+      <header className="hero-nav">
+        <div className="nav-pill">
+          <a 
+            href="/" 
+            className="brand-pill"
+            onClick={(e) => {
+              e.preventDefault()
+              if (window.location.pathname === '/') {
+                window.location.reload()
+              } else {
+                window.location.href = '/'
+              }
+            }}
+          >
+            <img src="/logo.png" alt="Optimum Electricals" className="brand-icon" />
+            <span className="brand-text">Optimum Electricals</span>
+          </a>
+          <nav className="nav-links">
+            <Link to="/privacy-policy" className="nav-link">Privacy Policy</Link>
+          </nav>
+          <button className="hamburger" aria-label="Open Menu" onClick={() => setMenuOpen((v) => !v)}>
+            <span />
+            <span />
+            <span />
+          </button>
+        </div>
+        {menuOpen && (
+          <div className="mobile-menu" onClick={() => setMenuOpen(false)}>
+            <Link to="/privacy-policy" className="mobile-link">Privacy Policy</Link>
+          </div>
+        )}
+      </header>
+
+      <div id="lead" className="lead-capture">
+        <div className="icon" style={{ width: 80, height: 80, background: 'transparent', boxShadow: 'none', padding: 0 }}>
+          <img
+            src="/logo.png"
+            alt="Optimum Electricals"
+            style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover', display: 'block' }}
+          />
+        </div>
       <h1>Optimum Electricals</h1>
       <p className="tagline">Professional electrician services at your doorstep</p>
 
-      <form onSubmit={handleContinue} noValidate className="lead-form">
+      <form id="booking-form" onSubmit={handleContinue} noValidate className="lead-form">
         <div className="form-group">
-          <label>Your Name *</label>
+          <label>Name</label>
           <input
             type="text"
             inputMode="text"
@@ -64,7 +99,7 @@ function LeadCapture() {
         </div>
 
         <div className="form-group">
-          <label>Phone Number *</label>
+          <label>Phone Number</label>
           <input
             type="tel"
             inputMode="tel"
@@ -103,6 +138,7 @@ function LeadCapture() {
           <CheckCircle className="check-icon" />
           <span>Experienced</span>
         </div>
+      </div>
       </div>
     </div>
   )
