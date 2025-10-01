@@ -11,10 +11,10 @@ function cn(...classes: (string | undefined | null | false)[]): string {
 
 interface RotatingTextProps {
   texts: string[];
-  transition?: any;
-  initial?: any;
-  animate?: any;
-  exit?: any;
+  transition?: Record<string, any>;
+  initial?: Record<string, any>;
+  animate?: Record<string, any>;
+  exit?: Record<string, any>;
   animatePresenceMode?: 'wait' | 'sync' | 'popLayout';
   animatePresenceInitial?: boolean;
   rotationInterval?: number;
@@ -30,7 +30,7 @@ interface RotatingTextProps {
   [key: string]: any;
 }
 
-const RotatingText = forwardRef<any, RotatingTextProps>((props, ref) => {
+const RotatingText = forwardRef<{ next: () => void; previous: () => void; jumpTo: (index: number) => void; reset: () => void }, RotatingTextProps>((props, ref) => {
   const {
     texts,
     transition = { type: 'spring', damping: 25, stiffness: 300 },
@@ -66,7 +66,7 @@ const RotatingText = forwardRef<any, RotatingTextProps>((props, ref) => {
     const currentText = texts[currentTextIndex];
     if (splitBy === 'characters') {
       const words = currentText.split(' ');
-      return words.map((word, i) => ({
+      return words.map((word: string, i: number) => ({
         characters: splitIntoCharacters(word),
         needsSpace: i !== words.length - 1
       }));
