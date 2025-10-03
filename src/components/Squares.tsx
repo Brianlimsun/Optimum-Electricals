@@ -93,7 +93,7 @@ const Squares = ({
       }
 
       // Create edge fade overlay
-      const edgeFadeSize = Math.min(rect.width, rect.height) * 0.4;
+      const edgeFadeSize = Math.min(rect.width, rect.height) * 0.5;
       
       // Top fade
       const topGradient = ctx.createLinearGradient(0, 0, 0, edgeFadeSize);
