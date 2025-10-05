@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import Navbar from '../components/Navbar'
 
 function PrivacyPolicy() {
-  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     window.scrollTo({
@@ -14,48 +14,7 @@ function PrivacyPolicy() {
 
   return (
     <div className="page-container">
-      {/* Navigation */}
-      <header className="hero-nav">
-        <div className="nav-pill">
-          <a 
-            href="/" 
-            className="brand-pill"
-            onClick={(e) => {
-              e.preventDefault()
-              if (window.location.pathname === '/') {
-                window.location.reload()
-              } else {
-                window.location.href = '/'
-              }
-            }}
-          >
-            <img src="/logo.png" alt="Optimum Electricals" className="brand-logo" />
-            <span className="brand-text">Optimum Electricals</span>
-          </a>
-          
-          <nav className="nav-links">
-            <Link to="/" className="nav-link">Home</Link>
-            <Link to="/privacy-policy" className="nav-link active">Privacy Policy</Link>
-          </nav>
-          
-          <button 
-            className="hamburger"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle menu"
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
-        </div>
-        
-        {menuOpen && (
-          <div className="mobile-menu">
-            <Link to="/" className="mobile-link" onClick={() => setMenuOpen(false)}>Home</Link>
-            <Link to="/privacy-policy" className="mobile-link active" onClick={() => setMenuOpen(false)}>Privacy Policy</Link>
-          </div>
-        )}
-      </header>
+      <Navbar />
 
       {/* Main Content */}
       <main className="privacy-policy">

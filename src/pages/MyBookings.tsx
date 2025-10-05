@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Navbar from '../components/Navbar'
 
 type StoredBooking = {
   id: string
@@ -20,7 +21,6 @@ const STORAGE_KEY = 'optimum:bookings'
 function MyBookings() {
   const navigate = useNavigate()
   const [bookings, setBookings] = useState<StoredBooking[]>([])
-  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     try {
@@ -38,56 +38,7 @@ function MyBookings() {
   if (!bookings.length) {
     return (
       <div className="page-container">
-        <header className="hero-nav">
-          <div className="nav-pill">
-            <a 
-              href="/" 
-              className="brand-pill"
-              onClick={(e) => {
-                e.preventDefault()
-                if (window.location.pathname === '/') {
-                  window.location.reload()
-                } else {
-                  window.location.href = '/'
-                }
-              }}
-            >
-              <img src="/logo.png" alt="Optimum Electricals" className="brand-icon" />
-              <span className="brand-text">Optimum Electricals</span>
-            </a>
-            <nav className="nav-links">
-              <a 
-                href="/privacy-policy" 
-                className="nav-link"
-                onClick={(e) => {
-                  e.preventDefault()
-                  window.location.href = '/privacy-policy'
-                }}
-              >
-                Privacy Policy
-              </a>
-            </nav>
-            <button className="hamburger" aria-label="Open Menu" onClick={() => setMenuOpen((v) => !v)}>
-              <span />
-              <span />
-              <span />
-            </button>
-          </div>
-          {menuOpen && (
-            <div className="mobile-menu" onClick={() => setMenuOpen(false)}>
-              <a 
-                href="/privacy-policy" 
-                className="mobile-link"
-                onClick={(e) => {
-                  e.preventDefault()
-                  window.location.href = '/privacy-policy'
-                }}
-              >
-                Privacy Policy
-              </a>
-            </div>
-          )}
-        </header>
+        <Navbar />
 
         <div className="booking-form">
           <div className="booking-header">
@@ -108,27 +59,7 @@ function MyBookings() {
 
   return (
     <div className="page-container">
-      <header className="hero-nav">
-        <div className="nav-pill">
-          <div className="brand-pill">
-            <img src="public/logo.png" alt="Optimum Electricals" className="brand-icon" />
-            <span className="brand-text">Optimum Electricals</span>
-          </div>
-          <nav className="nav-links">
-            <a className="nav-link" href="#">Privacy Policy</a>
-          </nav>
-          <button className="hamburger" aria-label="Open Menu" onClick={() => setMenuOpen((v) => !v)}>
-            <span />
-            <span />
-            <span />
-          </button>
-        </div>
-        {menuOpen && (
-          <div className="mobile-menu" onClick={() => setMenuOpen(false)}>
-            <a className="mobile-link" href="#">Privacy Policy</a>
-          </div>
-        )}
-      </header>
+      <Navbar />
 
       <div className="booking-form">
         <div className="booking-header">

@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Squares from './Squares'
 import RotatingText from './RotatingText'
+import Navbar from './Navbar'
 
 function Hero() {
-  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     window.scrollTo({
@@ -70,38 +70,7 @@ function Hero() {
         zIndex: 1
       }}>
       <div className="hero-inner">
-        <header className="hero-nav">
-          <div className="nav-pill">
-            <a 
-              href="/" 
-              className="brand-pill"
-              onClick={(e) => {
-                e.preventDefault()
-                if (window.location.pathname === '/') {
-                  window.location.reload()
-                } else {
-                  window.location.href = '/'
-                }
-              }}
-            >
-              <img src="/logo.png" alt="Optimum Electricals" className="brand-icon" />
-              <span className="brand-text">Optimum Electricals</span>
-            </a>
-            <nav className="nav-links">
-              <Link to="/privacy-policy" className="nav-link">Privacy Policy</Link>
-            </nav>
-            <button className="hamburger" aria-label="Open Menu" onClick={() => setMenuOpen((v) => !v)}>
-              <span />
-              <span />
-              <span />
-            </button>
-          </div>
-          {menuOpen && (
-            <div className="mobile-menu" onClick={() => setMenuOpen(false)}>
-              <Link to="/privacy-policy" className="mobile-link">Privacy Policy</Link>
-            </div>
-          )}
-        </header>
+        <Navbar />
 
         <div className="hero-content">
           <h1 className="hero-title">
@@ -125,7 +94,7 @@ function Hero() {
                 rotationInterval={2000}
               />{' '}<span className="electrical-text">Electrical</span>
             </span>
-            <span className="title-line-2">Services Without <br />the Wait</span>
+            <span className="title-line-2">Services Without the Wait</span>
           </h1>
           <div className="hero-actions">
             <a 

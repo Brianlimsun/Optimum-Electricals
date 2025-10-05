@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { ArrowRight, CheckCircle, ClipboardList } from 'lucide-react'
+import Navbar from '../components/Navbar'
 
 // Do not persist name/phone; require manual entry each time
 
@@ -10,7 +11,6 @@ function LeadCapture() {
   const [phone, setPhone] = useState('')
   const [errors, setErrors] = useState<{ name?: string; phone?: string }>({})
   const [hasBookings, setHasBookings] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     try {
@@ -40,38 +40,7 @@ function LeadCapture() {
 
   return (
     <div className="page-container">
-      <header className="hero-nav">
-        <div className="nav-pill">
-          <a 
-            href="/" 
-            className="brand-pill"
-            onClick={(e) => {
-              e.preventDefault()
-              if (window.location.pathname === '/') {
-                window.location.reload()
-              } else {
-                window.location.href = '/'
-              }
-            }}
-          >
-            <img src="/logo.png" alt="Optimum Electricals" className="brand-icon" />
-            <span className="brand-text">Optimum Electricals</span>
-          </a>
-          <nav className="nav-links">
-            <Link to="/privacy-policy" className="nav-link">Privacy Policy</Link>
-          </nav>
-          <button className="hamburger" aria-label="Open Menu" onClick={() => setMenuOpen((v) => !v)}>
-            <span />
-            <span />
-            <span />
-          </button>
-        </div>
-        {menuOpen && (
-          <div className="mobile-menu" onClick={() => setMenuOpen(false)}>
-            <Link to="/privacy-policy" className="mobile-link">Privacy Policy</Link>
-          </div>
-        )}
-      </header>
+      <Navbar />
 
       <div id="lead" className="lead-capture">
         <div className="icon" style={{ width: 80, height: 80, background: 'transparent', boxShadow: 'none', padding: 0 }}>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { CheckCircle, Upload, CreditCard } from 'lucide-react'
+import Navbar from '../components/Navbar'
 
 interface PaymentData {
   customerName: string
@@ -26,7 +27,6 @@ function PaymentConfirmation() {
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
   // Compress an image file to a data URL (JPEG) for faster uploads
   function compressImage(file: File, maxSize = 1200, quality = 0.7): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -186,38 +186,7 @@ function PaymentConfirmation() {
   if (!paymentData) {
     return (
       <div className="page-container">
-        <header className="hero-nav">
-          <div className="nav-pill">
-            <a 
-              href="/" 
-              className="brand-pill"
-              onClick={(e) => {
-                e.preventDefault()
-                if (window.location.pathname === '/') {
-                  window.location.reload()
-                } else {
-                  window.location.href = '/'
-                }
-              }}
-            >
-              <img src="/logo.png" alt="Optimum Electricals" className="brand-icon" />
-              <span className="brand-text">Optimum Electricals</span>
-            </a>
-            <nav className="nav-links">
-              <Link to="/privacy-policy" className="nav-link">Privacy Policy</Link>
-            </nav>
-            <button className="hamburger" aria-label="Open Menu" onClick={() => setMenuOpen((v) => !v)}>
-              <span />
-              <span />
-              <span />
-            </button>
-          </div>
-          {menuOpen && (
-            <div className="mobile-menu" onClick={() => setMenuOpen(false)}>
-              <Link to="/privacy-policy" className="mobile-link">Privacy Policy</Link>
-            </div>
-          )}
-        </header>
+        <Navbar />
 
         <div className="payment-confirmation">
           <div className="error-container">
@@ -249,38 +218,7 @@ function PaymentConfirmation() {
   if (success) {
     return (
       <div className="page-container">
-        <header className="hero-nav">
-          <div className="nav-pill">
-            <a 
-              href="/" 
-              className="brand-pill"
-              onClick={(e) => {
-                e.preventDefault()
-                if (window.location.pathname === '/') {
-                  window.location.reload()
-                } else {
-                  window.location.href = '/'
-                }
-              }}
-            >
-              <img src="/logo.png" alt="Optimum Electricals" className="brand-icon" />
-              <span className="brand-text">Optimum Electricals</span>
-            </a>
-            <nav className="nav-links">
-              <Link to="/privacy-policy" className="nav-link">Privacy Policy</Link>
-            </nav>
-            <button className="hamburger" aria-label="Open Menu" onClick={() => setMenuOpen((v) => !v)}>
-              <span />
-              <span />
-              <span />
-            </button>
-          </div>
-          {menuOpen && (
-            <div className="mobile-menu" onClick={() => setMenuOpen(false)}>
-              <Link to="/privacy-policy" className="mobile-link">Privacy Policy</Link>
-            </div>
-          )}
-        </header>
+        <Navbar />
 
         <div className="payment-confirmation">
           <div className="success-container">
@@ -328,27 +266,7 @@ function PaymentConfirmation() {
 
   return (
     <div className="page-container">
-      <header className="hero-nav">
-        <div className="nav-pill">
-          <Link to="/" className="brand-pill">
-            <img src="/logo.png" alt="Optimum Electricals" className="brand-icon" />
-            <span className="brand-text">Optimum Electricals</span>
-          </Link>
-          <nav className="nav-links">
-            <Link to="/privacy-policy" className="nav-link">Privacy Policy</Link>
-          </nav>
-          <button className="hamburger" aria-label="Open Menu" onClick={() => setMenuOpen((v) => !v)}>
-            <span />
-            <span />
-            <span />
-          </button>
-        </div>
-        {menuOpen && (
-          <div className="mobile-menu" onClick={() => setMenuOpen(false)}>
-            <a className="mobile-link" href="#">Privacy Policy</a>
-          </div>
-        )}
-      </header>
+      <Navbar />
 
       <div className="payment-confirmation">
         <div className="payment-header">
