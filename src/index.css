@@ -142,7 +142,7 @@ body {
   border-radius: 999px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  box-shadow: none;  /* Removed glow effect */
   width: clamp(340px, 50vw, 820px);
   justify-content: space-between;
 }
@@ -160,17 +160,17 @@ body {
 }
 .brand-icon { width: 24px; height: 24px; filter: drop-shadow(0 0 0 rgba(0,0,0,0)); }
 .brand-logo { width: 24px; height: 24px; filter: drop-shadow(0 0 0 rgba(0,0,0,0)); }
-.brand-text { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 900; color: #E5E7EB; font-size: 18px; letter-spacing: -0.01em; text-shadow: none; }
+.brand-text { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 900; color: #E5E7EB; font-size: 18px; letter-spacing: -0.01em; text-shadow: none; filter: none; }
 
 .nav-links { display: flex; gap: 22px; }
-.nav-link { color: #D1D5DB; text-decoration: none; font-weight: 600; font-size: 16px; text-shadow: none; }
+.nav-link { color: #D1D5DB; text-decoration: none; font-weight: 600; font-size: 16px; text-shadow: none; filter: none; }
 .nav-link:hover { color: #FFFFFF; }
 
 .hamburger { display: none; width: 44px; height: 44px; border-radius: 999px; background: transparent; border: none; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 0; cursor: pointer; }
 .hamburger span { display: block; width: 20px; height: 2px; background: #FFFFFF; border-radius: 1px; }
 
 .mobile-menu { display: none; position: absolute; left: 50%; transform: translateX(-50%); top: 82px; width: 92vw; max-width: 560px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 14px; backdrop-filter: blur(10px); }
-.mobile-link { display: block; color: #E5E7EB; text-decoration: none; font-weight: 600; padding: 12px 10px; border-radius: 12px; text-shadow: none; }
+.mobile-link { display: block; color: #E5E7EB; text-decoration: none; font-weight: 600; padding: 12px 10px; border-radius: 12px; text-shadow: none; filter: none; }
 .mobile-link:hover { background: rgba(255,255,255,0.06); }
 
 .bg-toggle {
@@ -3778,7 +3778,7 @@ body {
 /* Services Scroll Component */
 .services-scroll-container {
   width: 100%;
-  max-width: 800px;
+  max-width: 1000px;  /* Increased from 800px to 1000px for wider container */
   overflow: hidden;
   position: relative;
   margin: 0 auto;
@@ -3807,7 +3807,8 @@ body {
 
 .services-scroll {
   display: flex;
-  animation: scroll 30s linear infinite;  /* Slowed from 20s to 30s */
+  animation: scroll 15s linear infinite;  /* Consistent speed across all devices */
+  animation-duration: 15s;  /* Explicit duration to ensure consistency */
   white-space: nowrap;
   gap: 24px;
   align-items: center;
@@ -3864,6 +3865,26 @@ body {
   animation-play-state: paused;
 }
 
+/* Base animation properties for all devices */
+.services-scroll-container .services-scroll {
+  animation-timing-function: linear !important;
+  animation-iteration-count: infinite !important;
+}
+
+/* Override for tablet devices - medium speed */
+@media (max-width: 768px) {
+  .services-scroll-container .services-scroll {
+    animation-duration: 20s !important;  /* Medium speed for tablet */
+  }
+}
+
+/* Override for mobile devices - slower speed */
+@media (max-width: 480px) {
+  .services-scroll-container .services-scroll {
+    animation-duration: 25s !important;  /* Slower for mobile */
+  }
+}
+
 /* Responsive Services Section */
 @media (max-width: 768px) {
   .services-section {
@@ -3887,6 +3908,8 @@ body {
   
   .services-scroll {
     gap: 20px;
+    animation: scroll 20s linear infinite;  /* Medium speed for tablet */
+    animation-duration: 20s;  /* Medium duration for tablet */
   }
   
   .services-scroll-container::before,
@@ -3932,6 +3955,8 @@ body {
   
   .services-scroll {
     gap: 16px;
+    animation: scroll 25s linear infinite;  /* Slower speed for mobile */
+    animation-duration: 25s;  /* Slower duration for mobile */
   }
   
   .services-scroll-container::before,
