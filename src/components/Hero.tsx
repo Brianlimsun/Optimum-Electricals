@@ -91,7 +91,7 @@ function Hero() {
         <Navbar />
 
         <div className="hero-content">
-          <h1 className="hero-title scroll-reveal" ref={titleRef as React.RefObject<HTMLHeadingElement>}>
+          <h1 className="hero-title scroll-reveal-fade" ref={titleRef as React.RefObject<HTMLHeadingElement>}>
             <span className="title-line-1">
               <RotatingText
                 texts={[
@@ -114,12 +114,12 @@ function Hero() {
             </span>
             <span className="title-line-2">Services Without <br/>The Wait</span>
           </h1>
-          <div className="hero-subheading scroll-reveal scroll-reveal-delay-1" ref={subheadingRef as React.RefObject<HTMLDivElement>}>
+          <div className="hero-subheading scroll-reveal-fade scroll-reveal-delay-1" ref={subheadingRef as React.RefObject<HTMLDivElement>}>
             <p>
             From small home repairs to full solutions, done safely and fast
             </p>
           </div>
-          <div className="hero-actions scroll-reveal scroll-reveal-delay-2" ref={buttonsRef as React.RefObject<HTMLDivElement>}>
+          <div className="hero-actions scroll-reveal-scale scroll-reveal-delay-2" ref={buttonsRef as React.RefObject<HTMLDivElement>}>
             <a 
               href="#booking-form" 
               className="btn btn-primary"
@@ -134,7 +134,7 @@ function Hero() {
           </div>
           
           <div className="services-section">
-            <h3 className="services-heading scroll-reveal scroll-reveal-delay-2" ref={servicesHeadingRef as React.RefObject<HTMLHeadingElement>}>Our Services</h3>
+            <h3 className="services-heading scroll-reveal-fade scroll-reveal-delay-3" ref={servicesHeadingRef as React.RefObject<HTMLHeadingElement>}>Our Services</h3>
             <ServicesScroll />
           </div>
         </div>

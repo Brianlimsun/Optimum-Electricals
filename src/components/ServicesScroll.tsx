@@ -107,7 +107,7 @@ const ServicesScroll: React.FC = () => {
   const duplicatedServices = [...services, ...services, ...services];
 
   return (
-    <div className="services-scroll-container scroll-reveal scroll-reveal-delay-3" ref={scrollRef as React.RefObject<HTMLDivElement>}>
+    <div className="services-scroll-container scroll-reveal-fade scroll-reveal-delay-4" ref={scrollRef as React.RefObject<HTMLDivElement>}>
       <div className="services-scroll">
         {duplicatedServices.map((service, index) => (
           <div key={index} className="service-item">
