@@ -69,6 +69,10 @@ const Squares = ({
     const drawGrid = () => {
       const rect = canvas.getBoundingClientRect();
       ctx.clearRect(0, 0, rect.width, rect.height);
+      
+      // Fill canvas with black background
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, rect.width, rect.height);
 
       const startX = Math.floor(gridOffset.current.x / squareSize) * squareSize;
       const startY = Math.floor(gridOffset.current.y / squareSize) * squareSize;
@@ -78,6 +82,12 @@ const Squares = ({
           const squareX = x - (gridOffset.current.x % squareSize);
           const squareY = y - (gridOffset.current.y % squareSize);
 
+          // Draw only subtle borders (no filled squares)
+          const opacity = 0.15; // Slightly more visible borders
+          ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+          ctx.strokeRect(squareX, squareY, squareSize, squareSize);
+
+          // Hover effect
           if (
             hoveredSquare.current &&
             Math.floor((x - startX) / squareSize) === hoveredSquare.current.x &&
@@ -86,40 +96,37 @@ const Squares = ({
             ctx.fillStyle = hoverFillColor;
             ctx.fillRect(squareX, squareY, squareSize, squareSize);
           }
-
-          ctx.strokeStyle = borderColor;
-          ctx.strokeRect(squareX, squareY, squareSize, squareSize);
         }
       }
 
       // Create edge fade overlay
-      const edgeFadeSize = Math.min(rect.width, rect.height) * 0.5;
+      const edgeFadeSize = Math.min(rect.width, rect.height) * 0.6;
       
       // Top fade
       const topGradient = ctx.createLinearGradient(0, 0, 0, edgeFadeSize);
-      topGradient.addColorStop(0, '#0c0a12');
-      topGradient.addColorStop(1, 'rgba(12, 10, 18, 0)');
+      topGradient.addColorStop(0, '#000000');
+      topGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.fillStyle = topGradient;
       ctx.fillRect(0, 0, rect.width, edgeFadeSize);
       
       // Bottom fade
       const bottomGradient = ctx.createLinearGradient(0, rect.height - edgeFadeSize, 0, rect.height);
-      bottomGradient.addColorStop(0, 'rgba(12, 10, 18, 0)');
-      bottomGradient.addColorStop(1, '#0c0a12');
+      bottomGradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
+      bottomGradient.addColorStop(1, '#000000');
       ctx.fillStyle = bottomGradient;
       ctx.fillRect(0, rect.height - edgeFadeSize, rect.width, edgeFadeSize);
       
       // Left fade
       const leftGradient = ctx.createLinearGradient(0, 0, edgeFadeSize, 0);
-      leftGradient.addColorStop(0, '#0c0a12');
-      leftGradient.addColorStop(1, 'rgba(12, 10, 18, 0)');
+      leftGradient.addColorStop(0, '#000000');
+      leftGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.fillStyle = leftGradient;
       ctx.fillRect(0, 0, edgeFadeSize, rect.height);
       
       // Right fade
       const rightGradient = ctx.createLinearGradient(rect.width - edgeFadeSize, 0, rect.width, 0);
-      rightGradient.addColorStop(0, 'rgba(12, 10, 18, 0)');
-      rightGradient.addColorStop(1, '#0c0a12');
+      rightGradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
+      rightGradient.addColorStop(1, '#000000');
       ctx.fillStyle = rightGradient;
       ctx.fillRect(rect.width - edgeFadeSize, 0, edgeFadeSize, rect.height);
     };

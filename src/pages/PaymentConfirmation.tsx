@@ -24,7 +24,6 @@ function PaymentConfirmation() {
   const [paymentScreenshot, setPaymentScreenshot] = useState<File | null>(null)
   const [screenshotPreview, setScreenshotPreview] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
-  const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   // Compress an image file to a data URL (JPEG) for faster uploads
@@ -172,9 +171,12 @@ function PaymentConfirmation() {
         console.warn('Failed to save booking locally:', e)
       }
 
-      // Instantly show success
-      setSuccess(true)
+      // Store payment data for confirmed payment page
+      sessionStorage.setItem('confirmedPaymentData', JSON.stringify(finalData))
       sessionStorage.removeItem('bookingData')
+      
+      // Navigate to confirmed payment page
+      navigate('/confirmed-payment')
     } catch (err) {
       console.error('Payment confirmation error:', err)
       setError(err instanceof Error ? err.message : 'Failed to confirm payment. Please try again.')
@@ -215,54 +217,6 @@ function PaymentConfirmation() {
     )
   }
 
-  if (success) {
-    return (
-      <div className="page-container">
-        <Navbar />
-
-        <div className="payment-confirmation">
-          <div className="success-container">
-            <div className="success-icon">
-              <CheckCircle className="w-16 h-16" />
-            </div>
-            <h1>Payment Confirmed!</h1>
-            <p className="success-message">
-              Thank you for your payment! Your booking has been confirmed.
-            </p>
-            <div className="confirmation-details">
-              <h3>Booking Details:</h3>
-              <div className="detail-item">
-                <span className="label">Customer:</span>
-                <span className="value">{paymentData.customerName}</span>
-              </div>
-              <div className="detail-item">
-                <span className="label">Phone:</span>
-                <span className="value">{paymentData.customerPhone}</span>
-              </div>
-              <div className="detail-item">
-                <span className="label">Location:</span>
-                <span className="value">{paymentData.locality}, {paymentData.fullAddress}</span>
-              </div>
-              <div className="detail-item">
-                <span className="label">Date & Time:</span>
-                <span className="value">{paymentData.bookingDate} - {paymentData.preferredTimeSlot}</span>
-              </div>
-              <div className="detail-item">
-                <span className="label">Amount Paid:</span>
-                <span className="value">₹{paymentData.totalFee}</span>
-              </div>
-            </div>
-            <div className="next-steps">
-              <h3>What's Next?</h3>
-              <p>Our team will contact you shortly to confirm your appointment and provide any additional details.</p>
-              <p>You can expect a call within 30 minutes during business hours.</p>
-            </div>
-            <button onClick={() => navigate('/')} className="home-link">← Back to Home</button>
-          </div>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div className="page-container">
@@ -276,7 +230,6 @@ function PaymentConfirmation() {
               <span className="payment-text">Payment</span>
               <span className="confirm-text"> Confirmation</span>
             </h1>
-            <p className="greeting">Hi {paymentData.customerName}! Please complete your payment to confirm your booking.</p>
           </div>
         </div>
 

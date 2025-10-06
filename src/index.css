@@ -1,9 +1,9 @@
 /* Reset and base styles */
 :root{
-  --bg-primary: #0B0A12;
+  --bg-primary: #000000;
   --bg-secondary: #1a1a1a;
-  --bg-card: #0B0A12;
-  --bg-input: #0B0A12;
+  --bg-card: #1a1a1a;
+  --bg-input: #1a1a1a;
   --surface: #2a2a2a;
   --text-primary: #FFFFFF;
   --text-secondary: #B0B0B0;
@@ -102,6 +102,7 @@ body {
   min-height: calc(100vh - 140px);
   min-height: calc(100svh - 140px);
   text-align: center;
+  padding-top: 80px;  /* Added top padding to move content lower */
 }
 
 .hero-nav { 
@@ -127,10 +128,7 @@ body {
   border-radius: 999px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  box-shadow: 
-    0 0 0 1px rgba(255,255,255,0.1) inset,
-    0 4px 32px rgba(0,0,0,0.4),
-    0 1px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
   width: clamp(340px, 50vw, 820px);
   justify-content: space-between;
 }
@@ -148,17 +146,17 @@ body {
 }
 .brand-icon { width: 24px; height: 24px; filter: drop-shadow(0 0 0 rgba(0,0,0,0)); }
 .brand-logo { width: 24px; height: 24px; filter: drop-shadow(0 0 0 rgba(0,0,0,0)); }
-.brand-text { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 900; color: #E5E7EB; font-size: 18px; letter-spacing: -0.01em; }
+.brand-text { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 900; color: #E5E7EB; font-size: 18px; letter-spacing: -0.01em; text-shadow: none; }
 
 .nav-links { display: flex; gap: 22px; }
-.nav-link { color: #D1D5DB; text-decoration: none; font-weight: 600; font-size: 16px; }
+.nav-link { color: #D1D5DB; text-decoration: none; font-weight: 600; font-size: 16px; text-shadow: none; }
 .nav-link:hover { color: #FFFFFF; }
 
 .hamburger { display: none; width: 44px; height: 44px; border-radius: 999px; background: transparent; border: none; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 0; cursor: pointer; }
 .hamburger span { display: block; width: 20px; height: 2px; background: #FFFFFF; border-radius: 1px; }
 
 .mobile-menu { display: none; position: absolute; left: 50%; transform: translateX(-50%); top: 82px; width: 92vw; max-width: 560px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 14px; backdrop-filter: blur(10px); }
-.mobile-link { display: block; color: #E5E7EB; text-decoration: none; font-weight: 600; padding: 12px 10px; border-radius: 12px; }
+.mobile-link { display: block; color: #E5E7EB; text-decoration: none; font-weight: 600; padding: 12px 10px; border-radius: 12px; text-shadow: none; }
 .mobile-link:hover { background: rgba(255,255,255,0.06); }
 
 .bg-toggle {
@@ -278,6 +276,17 @@ body {
   line-height: 1.4;
 }
 
+.contact-address-link {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.contact-address-link:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
 /* Privacy Policy Page */
 .privacy-policy {
   background: var(--bg-primary);
@@ -391,7 +400,7 @@ body {
   text-decoration: underline;
 }
 
-.hero-actions { display: flex; gap: 20px; justify-content: center; margin-top: 36px; }
+.hero-actions { display: flex; gap: 20px; justify-content: center;  }
 .btn { padding: 16px 28px; border-radius: 999px; font-weight: 700; font-size: 16px; text-decoration: none; }
 .btn-primary { background: #FFFFFF; color: #0c0a12; border: 1px solid rgba(255,255,255,0.12); }
 .btn-ghost { background: rgba(255,255,255,0.06); color: #E5E7EB; border: 1px solid rgba(255,255,255,0.12); }
@@ -406,10 +415,16 @@ body {
 
 @media (max-width: 1024px) {
   .hero-title { font-size: 48px; }
+  .hero-content {
+    padding-top: 70px;  /* Slightly reduced for tablet */
+  }
 }
 
 @media (max-width: 640px) {
   .hero-inner { padding: 60px 16px 60px; }
+  .hero-content {
+    padding-top: 60px;  /* Reduced padding for mobile */
+  }
   .hero-nav { 
     top: 16px;
     padding: 0 16px;
@@ -523,37 +538,41 @@ body {
 .lead-form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 32px;
 }
 
 .form-group {
   text-align: left;
   width: 100%;
   box-sizing: border-box;
-  overflow: hidden;
+  margin-bottom: 24px;
 }
 
 .form-group label {
   display: block;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
   color: var(--text-primary);
   margin-bottom: 8px;
+  line-height: 1.4;
 }
 
 .form-group input {
   width: 100%;
   padding: 16px 20px;
   border: 1px solid var(--border);
-  border-radius: var(--radius-ctl);
+  border-radius: 10px;
   font-size: 16px; /* Keep 16px to avoid iOS zoom on focus */
   background-color: var(--bg-input);
   color: var(--text-primary);
   transition: all 0.2s ease;
+  min-height: 52px;
+  font-weight: 400;
 }
 
 .form-group input::placeholder {
   color: var(--text-muted);
+  font-weight: 400;
 }
 
 .form-group input:focus {
@@ -565,13 +584,13 @@ body {
 
 .continue-btn {
   width: 100%;
-  padding: 16px 24px;
+  padding: 18px 24px;
   background: var(--primary);
   color: var(--bg-primary);
   border: none;
-  border-radius: var(--radius-button);
+  border-radius: 10px;
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -579,12 +598,12 @@ body {
   gap: 8px;
   transition: all 0.2s ease;
   box-shadow: var(--shadow-button);
+  min-height: 56px;
 }
 
 .continue-btn:hover {
   background: var(--primary-hover);
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(250,204,20,0.3);
 }
 
 .trust-elements {
@@ -687,7 +706,7 @@ body {
 .booking-form-content {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 32px;
 }
 
 .form-row {
@@ -701,17 +720,20 @@ body {
   width: 100%;
   padding: 16px 20px;
   border: 1px solid var(--border);
-  border-radius: var(--radius-ctl);
+  border-radius: 10px;
   font-size: 16px;
   background-color: var(--bg-input);
   color: var(--text-primary);
   font-family: inherit;
   transition: all 0.2s ease;
+  min-height: 52px;
+  font-weight: 400;
 }
 
 .form-group textarea::placeholder,
 .form-group select::placeholder {
   color: var(--text-muted);
+  font-weight: 400;
 }
 
 .form-group textarea:focus,
@@ -724,22 +746,28 @@ body {
 
 .form-group textarea {
   resize: vertical;
-  min-height: 80px;
+  min-height: 100px;
 }
 
 .form-group select {
   cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+  padding-right: 40px;
 }
 
 .section-title {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 12px;
-  line-height: 1.2;
+  line-height: 1.3;
 }
 
 .section-title .icon {
@@ -757,12 +785,12 @@ body {
   text-align: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: #0B0A12;
+  background: #1a1a1a;  /* Changed from purple #0B0A12 to dark gray */
 }
 
 .image-upload:hover {
   border-color: #3b82f6;
-  background: rgba(59, 130, 246, 0.05);
+  background: #2a2a2a;  /* Darker gray on hover instead of blue tint */
 }
 
 .image-upload input[type="file"] {
@@ -859,7 +887,6 @@ body {
 .submit-btn:hover {
   background: var(--primary-hover);
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(250,204,20,0.3);
 }
 
 .submit-btn:disabled {
@@ -1158,6 +1185,610 @@ body {
   min-height: 56px;
 }
 
+/* Custom Date Input Field */
+.date-input-field {
+  width: 100%;
+  padding: 16px 20px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background-color: var(--bg-input);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  height: 52px;
+  min-height: 52px;
+  max-height: 52px;
+  transition: all 0.2s ease;
+  font-size: 16px;
+  font-weight: 400;
+  box-sizing: border-box;
+  /* Add same dropdown arrow as select inputs */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+  padding-right: 40px;
+}
+
+.date-input-field:hover {
+  border-color: var(--primary);
+  background-color: var(--bg-input);
+}
+
+.date-input-field:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: var(--shadow-focus);
+}
+
+.date-display {
+  color: var(--text-primary);
+  font-weight: 400;
+}
+
+
+/* Custom Dropdown Styles */
+.custom-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.dropdown-input {
+  position: relative;
+  cursor: pointer;
+}
+
+.dropdown-input-field {
+  width: 100%;
+  padding: 16px 20px;
+  padding-right: 40px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 16px;
+  background-color: var(--bg-input);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  min-height: 52px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.dropdown-input-field:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: var(--shadow-focus);
+}
+
+.dropdown-arrow {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666666;
+  transition: transform 0.2s ease;
+}
+
+.custom-dropdown.open .dropdown-arrow {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #2a2a2a;
+  border: 1px solid #404040;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  max-height: 200px;
+  margin-top: 4px;
+  /* Force scrollbar to always be visible - most aggressive approach */
+  overflow-y: scroll !important;
+  overflow: scroll !important;
+  /* Force scrollbar to always show */
+  scrollbar-width: thin !important;
+  scrollbar-color: #666666 #3a3a3a !important;
+  /* Reserve space for scrollbar */
+  scrollbar-gutter: stable !important;
+  /* Ensure content always exceeds container height to force scrollbar */
+  min-height: 201px !important;
+  /* Force scrollbar to always be visible on all browsers */
+  -webkit-overflow-scrolling: touch !important;
+  /* Add padding to force scrollbar space */
+  padding-right: 0 !important;
+  /* Force scrollbar to always be visible */
+  scrollbar-gutter: stable !important;
+  /* Force scrollbar to always be visible */
+  overflow-y: scroll !important;
+  overflow: scroll !important;
+  /* Ensure scrollbar is always visible */
+  scrollbar-width: thin !important;
+  scrollbar-color: #666666 #3a3a3a !important;
+  /* Custom scrollbar styling */
+  scrollbar-width: thin !important;
+  scrollbar-color: #666666 #3a3a3a !important;
+}
+
+.dropdown-menu::-webkit-scrollbar {
+  width: 8px !important;
+  -webkit-appearance: none !important;
+  display: block !important;
+  /* Force scrollbar to always be visible */
+  opacity: 1 !important;
+  visibility: visible !important;
+  /* Force scrollbar to always show */
+  -webkit-scrollbar-width: thin !important;
+  -webkit-scrollbar-color: #666666 #3a3a3a !important;
+}
+
+.dropdown-menu::-webkit-scrollbar-track {
+  background: #3a3a3a !important;
+  border-radius: 4px;
+  display: block !important;
+  /* Ensure track is always visible */
+  opacity: 1 !important;
+  visibility: visible !important;
+  /* Force track to always be visible */
+  -webkit-box-shadow: inset 0 0 0 1px #3a3a3a !important;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb {
+  background: #666666 !important;
+  border-radius: 4px;
+  border: 1px solid #3a3a3a;
+  display: block !important;
+  min-height: 20px !important;
+  /* Ensure thumb is always visible */
+  opacity: 1 !important;
+  visibility: visible !important;
+  /* Force thumb to always be visible */
+  -webkit-box-shadow: inset 0 0 0 1px #666666 !important;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb:hover {
+  background: #777777 !important;
+}
+
+.dropdown-menu::-webkit-scrollbar:vertical {
+  width: 8px !important;
+  display: block !important;
+  /* Force vertical scrollbar to always be visible */
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Force scrollbar to always be visible */
+.dropdown-menu::-webkit-scrollbar-corner {
+  background: #3a3a3a !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Additional force for scrollbar visibility */
+.dropdown-menu {
+  scrollbar-gutter: stable !important;
+  /* Force scrollbar to always be visible */
+  overflow-y: scroll !important;
+  overflow: scroll !important;
+  /* Ensure content always exceeds container height to force scrollbar */
+  min-height: 201px !important;
+  /* Force scrollbar to always be visible */
+  scrollbar-width: thin !important;
+  scrollbar-color: #666666 #3a3a3a !important;
+  /* Force scrollbar to always be visible */
+  scrollbar-gutter: stable !important;
+  /* Force scrollbar to always be visible */
+  overflow-y: scroll !important;
+  overflow: scroll !important;
+}
+
+/* Force scrollbar to always be visible - most aggressive approach */
+.dropdown-menu::-webkit-scrollbar {
+  width: 8px !important;
+  -webkit-appearance: none !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  /* Force scrollbar to always show */
+  -webkit-scrollbar-width: thin !important;
+  -webkit-scrollbar-color: #666666 #3a3a3a !important;
+}
+
+.dropdown-menu::-webkit-scrollbar-track {
+  background: #3a3a3a !important;
+  border-radius: 4px;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  /* Force track to always be visible */
+  -webkit-box-shadow: inset 0 0 0 1px #3a3a3a !important;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb {
+  background: #666666 !important;
+  border-radius: 4px;
+  border: 1px solid #3a3a3a;
+  display: block !important;
+  min-height: 20px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  /* Force thumb to always be visible */
+  -webkit-box-shadow: inset 0 0 0 1px #666666 !important;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb:hover {
+  background: #777777 !important;
+}
+
+.dropdown-menu::-webkit-scrollbar:vertical {
+  width: 8px !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.dropdown-menu::-webkit-scrollbar-corner {
+  background: #3a3a3a !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.dropdown-option {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  padding-left: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid #404040;
+  color: #ffffff;
+}
+
+.dropdown-option:last-child {
+  border-bottom: none;
+}
+
+.dropdown-option:hover {
+  background-color: #3a3a3a;
+}
+
+.dropdown-option.selected {
+  background-color: rgba(250, 204, 20, 0.2);
+  color: var(--primary);
+}
+
+.dropdown-option.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  color: var(--text-muted);
+}
+
+
+.option-label {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 400;
+  color: #ffffff;
+}
+
+.dropdown-option.selected .option-label {
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.option-check {
+  color: var(--primary);
+  margin-left: 8px;
+}
+
+.dropdown-no-results {
+  padding: 20px 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.no-results-icon {
+  font-size: 24px;
+  opacity: 0.6;
+  margin-bottom: 4px;
+}
+
+.no-results-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #a0a0a0;
+  margin-bottom: 4px;
+}
+
+.no-results-suggestion {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.4;
+  max-width: 200px;
+}
+
+/* Custom DatePicker Styles */
+.date-picker-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  overflow-y: auto;
+  /* Ensure it's centered in viewport */
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
+}
+
+.date-picker-container {
+  background: var(--bg-card);
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.date-input-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card);
+}
+
+.selected-date-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.date-picker-arrow {
+  width: 20px;
+  height: 20px;
+  color: var(--text-secondary);
+}
+
+.calendar-card {
+  padding: 20px;
+  background: var(--bg-card);
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.calendar-nav-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.calendar-nav-btn:hover {
+  background: var(--surface);
+  border-color: var(--primary);
+}
+
+.calendar-month-year {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.calendar-day-headers {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.day-header {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding: 8px 4px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 20px;
+}
+
+.calendar-day {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.calendar-day:hover:not(.disabled):not(.selected) {
+  background: rgba(250, 204, 20, 0.1);
+  border: 1px solid rgba(250, 204, 20, 0.3);
+}
+
+.calendar-day.selected {
+  background: var(--primary);
+  color: var(--bg-primary);
+  font-weight: 700;
+  border-radius: 8px;
+  transform: scale(1.05);
+}
+
+.calendar-day.hovered:not(.selected):not(.disabled) {
+  border: 1px solid var(--primary);
+  background: rgba(250, 204, 20, 0.1);
+}
+
+.calendar-day.disabled {
+  color: var(--text-muted);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.calendar-day.today:not(.selected) {
+  background: rgba(250, 204, 20, 0.1);
+  border: 1px solid rgba(250, 204, 20, 0.3);
+  color: var(--primary);
+}
+
+.calendar-day.prev-month-day,
+.calendar-day.next-month-day {
+  color: var(--text-muted);
+  cursor: default;
+}
+
+.calendar-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.calendar-btn {
+  flex: 1;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.cancel-btn {
+  background: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.cancel-btn:hover {
+  background: var(--bg-input);
+}
+
+.choose-btn {
+  background: var(--primary);
+  color: var(--bg-primary);
+}
+
+.choose-btn:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+.choose-btn:disabled {
+  background: var(--text-muted);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .date-picker-overlay {
+    padding: 10px;
+    align-items: center;
+    justify-content: center;
+    /* Keep centered in viewport on mobile too */
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  
+  .date-picker-container {
+    max-width: 100%;
+    margin: auto;
+  }
+  
+  .calendar-card {
+    padding: 16px;
+  }
+  
+  .calendar-day {
+    width: 36px;
+    height: 36px;
+    font-size: 13px;
+  }
+  
+  .calendar-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .calendar-btn {
+    padding: 14px 20px;
+  }
+  
+  .date-input-display {
+    padding: 16px 18px;
+  }
+  
+  .selected-date-text {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .date-picker-overlay {
+    padding: 5px;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  
+  .calendar-day {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+  
+  .calendar-card {
+    padding: 12px;
+  }
+  
+  .calendar-header {
+    margin-bottom: 16px;
+  }
+  
+  .calendar-month-year {
+    font-size: 16px;
+  }
+}
+
 @media (max-width: 768px) {
   .booking-header h1 {
     font-size: 28px;
@@ -1281,7 +1912,7 @@ body {
   }
   
   .booking-form-content {
-    gap: 24px;
+    gap: 28px;
   }
   
   .form-row {
@@ -1485,7 +2116,7 @@ body {
   }
   
   .booking-header h1 {
-    font-size: 22px;
+    font-size: 30px;
     margin-bottom: 6px;
   }
   
@@ -1500,7 +2131,7 @@ body {
   }
   
   .booking-form-content {
-    gap: 20px;
+    gap: 24px;
   }
   
   .section-title {
@@ -1885,12 +2516,12 @@ body {
   text-align: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: #0B0A12;
+  background: #1a1a1a;  /* Changed from purple #0B0A12 to dark gray */
 }
 
 .upload-area:hover {
   border-color: #3b82f6;
-  background: rgba(59, 130, 246, 0.05);
+  background: #2a2a2a;  /* Darker gray on hover instead of blue tint */
 }
 
 .upload-area input[type="file"] {
@@ -1974,7 +2605,6 @@ body {
 .confirm-payment-btn:hover {
   background: var(--primary-hover);
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(250,204,20,0.3);
 }
 
 .confirm-payment-btn:disabled {
@@ -2679,4 +3309,761 @@ body {
   background: var(--bg-input);
   border-color: var(--primary);
   color: var(--primary);
+}
+
+/* Force scrollbar to always be visible - most aggressive approach */
+.dropdown-menu {
+  /* Force scrollbar to always be visible */
+  overflow-y: scroll !important;
+  overflow: scroll !important;
+  /* Force scrollbar to always show */
+  scrollbar-width: thin !important;
+  scrollbar-color: #666666 #3a3a3a !important;
+  /* Reserve space for scrollbar */
+  scrollbar-gutter: stable !important;
+  /* Ensure content always exceeds container height to force scrollbar */
+  min-height: 201px !important;
+  /* Force scrollbar to always be visible on all browsers */
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* Force scrollbar to always be visible - webkit approach */
+.dropdown-menu::-webkit-scrollbar {
+  width: 8px !important;
+  -webkit-appearance: none !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  /* Force scrollbar to always show */
+  -webkit-scrollbar-width: thin !important;
+  -webkit-scrollbar-color: #666666 #3a3a3a !important;
+}
+
+.dropdown-menu::-webkit-scrollbar-track {
+  background: #3a3a3a !important;
+  border-radius: 4px;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  /* Force track to always be visible */
+  -webkit-box-shadow: inset 0 0 0 1px #3a3a3a !important;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb {
+  background: #666666 !important;
+  border-radius: 4px;
+  border: 1px solid #3a3a3a;
+  display: block !important;
+  min-height: 20px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  /* Force thumb to always be visible */
+  -webkit-box-shadow: inset 0 0 0 1px #666666 !important;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb:hover {
+  background: #777777 !important;
+}
+
+.dropdown-menu::-webkit-scrollbar:vertical {
+  width: 8px !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.dropdown-menu::-webkit-scrollbar-corner {
+  background: #3a3a3a !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* ULTIMATE SCROLLBAR FORCE - Always visible with full height track */
+.dropdown-menu {
+  /* Force scrollbar to always be visible */
+  overflow-y: scroll !important;
+  overflow: scroll !important;
+  /* Force scrollbar space to be reserved */
+  scrollbar-gutter: stable !important;
+  /* Ensure content always exceeds container */
+  min-height: 201px !important;
+  /* Force scrollbar colors */
+  scrollbar-width: thin !important;
+  scrollbar-color: #8a8a8a #3a3a3a !important;
+}
+
+/* Force webkit scrollbar to always be visible */
+.dropdown-menu::-webkit-scrollbar {
+  width: 8px !important;
+  height: 100% !important;
+  -webkit-appearance: none !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  /* Force scrollbar to always show */
+  -webkit-scrollbar-width: thin !important;
+  -webkit-scrollbar-color: #8a8a8a #3a3a3a !important;
+}
+
+/* Force track to always be visible with full height */
+.dropdown-menu::-webkit-scrollbar-track {
+  background: #3a3a3a !important;
+  border-radius: 4px !important;
+  /* Force track to extend full height */
+  height: 100% !important;
+  min-height: 200px !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  /* Force track to always be visible */
+  -webkit-box-shadow: inset 0 0 0 1px #3a3a3a !important;
+  /* Ensure track extends to full height */
+  position: absolute !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  right: 0 !important;
+}
+
+/* Force thumb to always be visible */
+.dropdown-menu::-webkit-scrollbar-thumb {
+  background: #8a8a8a !important;
+  border-radius: 4px !important;
+  min-height: 40px !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  /* Force thumb to always be visible */
+  -webkit-box-shadow: inset 0 0 0 1px #8a8a8a !important;
+  /* Ensure thumb is always present */
+  position: relative !important;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0 !important;
+}
+
+/* Force vertical scrollbar to always be visible */
+.dropdown-menu::-webkit-scrollbar:vertical {
+  width: 8px !important;
+  height: 100% !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Force scrollbar corner to be visible */
+.dropdown-menu::-webkit-scrollbar-corner {
+  background: #3a3a3a !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
+/* FAKE SCROLLBAR - Show only when not scrolling */
+.dropdown-menu::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 100%;
+  background: #3a3a3a;
+  border-radius: 4px;
+  z-index: 1001;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.dropdown-menu::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 2px;
+  width: 4px;
+  height: 40px;
+  background: #8a8a8a;
+  border-radius: 2px;
+  z-index: 1002;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* Hide fake scrollbar when scrolling */
+.dropdown-menu.scrolling::after,
+.dropdown-menu.scrolling::before {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Hero Subheading - Enhanced UI */
+.hero-subheading {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-top: 32px;  /* Increased from 20px to match screenshot spacing */
+  margin-bottom: 48px;  /* Increased from 32px to match screenshot spacing */
+  max-width: 700px;
+  text-align: center;
+  position: relative;
+  padding: 0 20px;
+  
+  /* Enhanced typography */
+  letter-spacing: 0.3px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  
+  /* Subtle animation */
+  animation: fadeInUp 0.8s ease-out 0.3s both;
+}
+
+.hero-subheading p {
+  margin: 0;
+  position: relative;
+}
+
+/* Highlight text styling */
+.hero-subheading .highlight-text {
+  color: var(--primary);
+  font-weight: 600;
+  position: relative;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.hero-subheading .highlight-text::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), transparent);
+  opacity: 0.6;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.hero-subheading .highlight-text:hover::after {
+  transform: scaleX(1);
+}
+
+/* Responsive subheading */
+@media (max-width: 768px) {
+  .hero-subheading {
+    font-size: 18px;
+    margin-top: 24px;  /* Increased from 16px to maintain proportion */
+    margin-bottom: 36px;  /* Increased from 28px to maintain proportion */
+    max-width: 90%;
+    padding: 0 15px;
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-subheading {
+    font-size: 16px;
+    margin-top: 20px;  /* Increased from 14px to maintain proportion */
+    margin-bottom: 32px;  /* Increased from 24px to maintain proportion */
+    padding: 0 10px;
+    line-height: 1.4;
+  }
+  
+  .hero-subheading .highlight-text {
+    font-weight: 500;
+  }
+}
+
+/* Fade in animation for subheading */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scroll reveal animations */
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Scroll reveal classes */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s ease-out;  /* Slowed from 0.6s to 1.2s */
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-reveal-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: all 1.2s ease-out;  /* Slowed from 0.6s to 1.2s */
+}
+
+.scroll-reveal-left.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-reveal-right {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: all 1.2s ease-out;  /* Slowed from 0.6s to 1.2s */
+}
+
+.scroll-reveal-right.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-reveal-scale {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: all 1.2s ease-out;  /* Slowed from 0.6s to 1.2s */
+}
+
+.scroll-reveal-scale.revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.scroll-reveal-delay-1 {
+  transition-delay: 0.1s;
+}
+
+.scroll-reveal-delay-2 {
+  transition-delay: 0.2s;
+}
+
+.scroll-reveal-delay-3 {
+  transition-delay: 0.3s;
+}
+
+.scroll-reveal-delay-4 {
+  transition-delay: 0.4s;
+}
+
+/* Services Section */
+.services-section {
+  margin-top: 60px;  /* Increased from 40px to match screenshot spacing */
+  text-align: center;
+}
+
+.services-heading {
+  font-size: 24px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+/* Services Scroll Component */
+.services-scroll-container {
+  width: 100%;
+  max-width: 800px;
+  overflow: hidden;
+  position: relative;
+  margin: 0 auto;
+}
+
+.services-scroll-container::before,
+.services-scroll-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: max(15%, 60px);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.services-scroll-container::before {
+  left: 0;
+  background: linear-gradient(to right, #000000 0%, #000000 20%, transparent 100%);
+}
+
+.services-scroll-container::after {
+  right: 0;
+  background: linear-gradient(to left, #000000 0%, #000000 20%, transparent 100%);
+}
+
+.services-scroll {
+  display: flex;
+  animation: scroll 30s linear infinite;  /* Slowed from 20s to 30s */
+  white-space: nowrap;
+  gap: 24px;
+  align-items: center;
+}
+
+.service-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.service-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.service-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: #ffffff;
+}
+
+.service-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.333%);
+  }
+}
+
+/* Pause animation on hover */
+.services-scroll-container:hover .services-scroll {
+  animation-play-state: paused;
+}
+
+/* Responsive Services Section */
+@media (max-width: 768px) {
+  .services-section {
+    margin-top: 48px;  /* Reduced from 60px for tablet */
+  }
+  
+  .services-heading {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .service-item {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+  
+  .service-icon {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .services-scroll {
+    gap: 20px;
+  }
+  
+  .services-scroll-container::before,
+  .services-scroll-container::after {
+    width: max(12%, 50px);
+  }
+}
+
+@media (max-width: 480px) {
+  .services-section {
+    margin-top: 40px;  /* Reduced from 60px for mobile */
+  }
+  
+  .services-scroll-container {
+    max-width: none;
+    width: 100%;
+  }
+  
+  /* Make buttons smaller on very small screens */
+  .btn {
+    padding: 10px 16px;  /* Smaller than 12px 18px */
+    font-size: 14px;      /* Smaller than 15px */
+  }
+  
+  .hero-actions {
+    gap: 10px;  /* Smaller gap between buttons */
+  }
+  
+  .services-heading {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+  
+  .service-item {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+  
+  .service-icon {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .services-scroll {
+    gap: 16px;
+  }
+  
+  .services-scroll-container::before,
+  .services-scroll-container::after {
+    width: 60px;
+    background: linear-gradient(to right, #000000 0%, #000000 30%, transparent 100%);
+  }
+  
+  .services-scroll-container::after {
+    background: linear-gradient(to left, #000000 0%, #000000 30%, transparent 100%);
+  }
+}
+
+/* FAQ Section Styles */
+.faq-section {
+  background: #000000;
+  padding: 80px 20px;
+  position: relative;
+}
+
+.faq-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.faq-header {
+  text-align: left;
+  margin-bottom: 60px;
+}
+
+.faq-title {
+  font-size: 32px;
+  font-weight: 400;
+  color: #ffffff;
+  margin: 0 0 8px 0;
+  line-height: 1.2;
+}
+
+.faq-subtitle {
+  font-size: 48px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.faq-subtitle-text {
+  color: #ffffff;
+}
+
+.faq-subtitle-accent {
+  color: #FACC14;
+}
+
+.faq-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.faq-item {
+  background: #1a1a1a;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  background: #222222;
+}
+
+.faq-question {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 24px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.faq-question:hover {
+  background: #222222;
+}
+
+.faq-question-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.4;
+  flex: 1;
+  margin-right: 16px;
+}
+
+.faq-icon {
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.faq-question[aria-expanded="true"] .faq-icon {
+  transform: rotate(180deg);
+}
+
+.faq-answer {
+  padding: 0 28px 24px 28px;
+  animation: fadeInDown 0.3s ease;
+}
+
+.faq-answer p {
+  font-size: 16px;
+  color: #a0a0a0;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive FAQ */
+@media (max-width: 768px) {
+  .faq-section {
+    padding: 60px 16px;
+  }
+  
+  .faq-title {
+    font-size: 28px;
+  }
+  
+  .faq-subtitle {
+    font-size: 36px;
+  }
+  
+  .faq-question {
+    padding: 20px 24px;
+  }
+  
+  .faq-question-text {
+    font-size: 16px;
+  }
+  
+  .faq-answer {
+    padding: 0 24px 20px 24px;
+  }
+  
+  .faq-answer p {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .faq-section {
+    padding: 40px 12px;
+  }
+  
+  .faq-title {
+    font-size: 24px;
+  }
+  
+  .faq-subtitle {
+    font-size: 28px;
+  }
+  
+  .faq-question {
+    padding: 18px 20px;
+  }
+  
+  .faq-question-text {
+    font-size: 15px;
+  }
+  
+  .faq-answer {
+    padding: 0 20px 18px 20px;
+  }
+  
+  .faq-answer p {
+    font-size: 14px;
+  }
 }

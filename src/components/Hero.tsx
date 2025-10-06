@@ -3,8 +3,14 @@ import { Link } from 'react-router-dom'
 import Squares from './Squares'
 import RotatingText from './RotatingText'
 import Navbar from './Navbar'
+import ServicesScroll from './ServicesScroll'
+import useScrollReveal from '../hooks/useScrollReveal'
 
 function Hero() {
+  const titleRef = useScrollReveal({ threshold: 0.2 })
+  const subheadingRef = useScrollReveal({ threshold: 0.2 })
+  const buttonsRef = useScrollReveal({ threshold: 0.2 })
+  const servicesHeadingRef = useScrollReveal({ threshold: 0.05 })
 
   useEffect(() => {
     window.scrollTo({
@@ -13,6 +19,18 @@ function Hero() {
       behavior: 'auto'
     })
   }, [])
+
+  // Fallback: ensure services heading becomes visible after a delay if scroll reveal doesn't trigger
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const element = servicesHeadingRef.current;
+      if (element && !element.classList.contains('revealed')) {
+        element.classList.add('revealed');
+      }
+    }, 1200); // 1.2 second fallback (after other elements)
+
+    return () => clearTimeout(timer);
+  }, [servicesHeadingRef])
 
   // Function to handle smooth scroll to lead capture card
   const scrollToLeadCard = () => {
@@ -49,7 +67,7 @@ function Hero() {
   return (
     <section className="hero"
       style={{ 
-        background: '#0c0a12',
+        background: '#000000',
         position: 'relative'
       }}
     >
@@ -73,7 +91,7 @@ function Hero() {
         <Navbar />
 
         <div className="hero-content">
-          <h1 className="hero-title">
+          <h1 className="hero-title scroll-reveal" ref={titleRef as React.RefObject<HTMLHeadingElement>}>
             <span className="title-line-1">
               <RotatingText
                 texts={[
@@ -94,9 +112,14 @@ function Hero() {
                 rotationInterval={2000}
               />{' '}<span className="electrical-text">Electrical</span>
             </span>
-            <span className="title-line-2">Services Without the Wait</span>
+            <span className="title-line-2">Services Without <br/>The Wait</span>
           </h1>
-          <div className="hero-actions">
+          <div className="hero-subheading scroll-reveal scroll-reveal-delay-1" ref={subheadingRef as React.RefObject<HTMLDivElement>}>
+            <p>
+            From small home repairs to full solutions, done safely and fast
+            </p>
+          </div>
+          <div className="hero-actions scroll-reveal scroll-reveal-delay-2" ref={buttonsRef as React.RefObject<HTMLDivElement>}>
             <a 
               href="#booking-form" 
               className="btn btn-primary"
@@ -108,6 +131,11 @@ function Hero() {
               Book Now
             </a>
             <Link to="/privacy-policy" className="btn btn-ghost">Learn More</Link>
+          </div>
+          
+          <div className="services-section">
+            <h3 className="services-heading scroll-reveal scroll-reveal-delay-2" ref={servicesHeadingRef as React.RefObject<HTMLHeadingElement>}>Our Services</h3>
+            <ServicesScroll />
           </div>
         </div>
 

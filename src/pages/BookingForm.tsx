@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { MapPin, Clock, Camera, CheckCircle } from 'lucide-react'
 import Navbar from '../components/Navbar'
+import DatePicker from '../components/DatePicker'
+import CustomDropdown from '../components/CustomDropdown'
 
 type ImageItem = {
   id: string
@@ -55,6 +57,7 @@ function BookingForm() {
   const [success, setSuccess] = useState<string | null>(null)
   const [availableTimeSlots, setAvailableTimeSlots] = useState<string[]>([])
   const [loadingTimeSlots, setLoadingTimeSlots] = useState(false)
+  const [showDatePicker, setShowDatePicker] = useState(false)
 
   const localityOptions = [
     { name: 'Bara Bazar', fee: 300 },
@@ -78,6 +81,13 @@ function BookingForm() {
     { name: 'Other', fee: 300 }
   ]
 
+  // Custom dropdown options for locality
+  const localityDropdownOptions = localityOptions.map(option => ({
+    value: option.name,
+    label: option.name,
+    emoji: ''
+  }))
+
   const allTimeSlots = [
     '10:00-11:00',
     '11:00-12:00',
@@ -88,6 +98,18 @@ function BookingForm() {
     '16:00-17:00',
     '17:00-18:00',
   ]
+
+  // Custom dropdown options for time slots with availability status
+  const timeSlotDropdownOptions = allTimeSlots.map(slot => {
+    const isAvailable = availableTimeSlots.includes(slot)
+    const isBooked = !isAvailable && !!bookingDate
+    return {
+      value: slot,
+      label: `${slot} ${isBooked ? '(Booked)' : isAvailable ? '(Available)' : ''}`,
+      disabled: isBooked,
+      color: isBooked ? '#ff6b6b' : isAvailable ? '#51cf66' : '#868e96'
+    }
+  })
 
   // Function to check available time slots from Google Sheets
   const checkAvailableTimeSlots = async (date: string) => {
@@ -322,7 +344,6 @@ function BookingForm() {
               <span className="book-text">Book</span>
               <span className="service-text"> Your Service</span>
             </h1>
-            <p className="greeting">Hi {name || 'there'}! Let's get your electrical issue resolved.</p>
           </div>
         </div>
 
@@ -344,18 +365,12 @@ function BookingForm() {
           </h3>
               <div className="form-group">
                 <label>Locality *</label>
-                <select 
-                  value={locality} 
-                  onChange={(e) => setLocality(e.target.value)}
-                  className="locality-select"
-                >
-                  <option value="">Select locality</option>
-                  {localityOptions.map((option) => (
-                    <option key={option.name} value={option.name}>
-                      {option.name}
-                    </option>
-                  ))}
-                </select>
+                <CustomDropdown
+                  options={localityDropdownOptions}
+                  value={locality}
+                  onChange={setLocality}
+                  placeholder="Select locality"
+                />
                 {locality && (
                   <div className="selected-locality">
                     Selected: {locality} - ₹300
@@ -397,12 +412,19 @@ function BookingForm() {
             <Clock className="icon" />
             <span>Booking Date *</span>
           </h3>
-          <input
-            type="date"
-            value={bookingDate}
-            onChange={(e) => setBookingDate(e.target.value)}
-            min={new Date().toISOString().split('T')[0]}
-          />
+          <div 
+            className="date-input-field"
+            onClick={() => setShowDatePicker(true)}
+          >
+            <span className="date-display">
+              {bookingDate ? new Date(bookingDate).toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+              }) : 'Select a date'}
+            </span>
+          </div>
           {isToday && (
             <div className="urgent-badge">
               <span className="urgent-icon">⚡</span>
@@ -415,36 +437,19 @@ function BookingForm() {
           <h3 className="section-title">
             <Clock className="icon" />
             <span>Preferred Time Slot *</span>
-            {loadingTimeSlots && <span className="loading-text">Checking availability...</span>}
           </h3>
-          <select 
-            value={timeSlot} 
-            onChange={(e) => setTimeSlot(e.target.value)}
-            disabled={loadingTimeSlots || availableTimeSlots.length === 0}
-          >
-            <option value="">
-              {loadingTimeSlots 
+          <CustomDropdown
+            options={timeSlotDropdownOptions}
+            value={timeSlot}
+            onChange={setTimeSlot}
+            placeholder={
+              loadingTimeSlots 
                 ? 'Checking availability...' 
                 : availableTimeSlots.length === 0 
                   ? 'No slots available for this date' 
                   : 'Select preferred time'
-              }
-            </option>
-            {allTimeSlots.map(slot => {
-              const isAvailable = availableTimeSlots.includes(slot)
-              const isBooked = !isAvailable && bookingDate
-              return (
-                <option 
-                  key={slot} 
-                  value={slot} 
-                  disabled={!isAvailable}
-                  style={{ color: isBooked ? '#ff6b6b' : isAvailable ? '#51cf66' : '#868e96' }}
-                >
-                  {slot} {isBooked ? '(Booked)' : isAvailable ? '(Available)' : ''}
-                </option>
-              )
-            })}
-          </select>
+            }
+          />
           {bookingDate && availableTimeSlots.length === 0 && (
             <div className="no-slots-message">
               <p>All time slots are booked for this date. Please choose a different date.</p>
@@ -521,6 +526,16 @@ function BookingForm() {
           {submitting ? 'Processing…' : `Proceed to Payment${totalFee > 0 ? ` - ₹${totalFee}` : ''}`}
         </button>
       </form>
+
+      {/* Custom DatePicker Modal */}
+      {showDatePicker && (
+        <DatePicker
+          value={bookingDate}
+          onChange={setBookingDate}
+          onClose={() => setShowDatePicker(false)}
+          minDate={new Date().toISOString().split('T')[0]}
+        />
+      )}
       </div>
     </div>
   )

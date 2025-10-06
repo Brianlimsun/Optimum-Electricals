@@ -1,8 +1,10 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import LeadCapture from './pages/LeadCapture'
 import Hero from './components/Hero'
+import FAQ from './components/FAQ'
 import BookingForm from './pages/BookingForm'
 import PaymentConfirmation from './pages/PaymentConfirmation'
+import ConfirmedPayment from './pages/ConfirmedPayment'
 import MyBookings from './pages/MyBookings'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import ScrollToTop from './components/ScrollToTop'
@@ -25,11 +27,13 @@ function App() {
                 <div style={{ display: 'flex', justifyContent: 'center', padding: '40px 20px' }}>
                   <LeadCapture />
                 </div>
+                <FAQ />
               </div>
             }
           />
           <Route path="/booking" element={<BookingForm />} />
           <Route path="/payment" element={<PaymentConfirmation />} />
+          <Route path="/confirmed-payment" element={<ConfirmedPayment />} />
           <Route path="/my-bookings" element={<MyBookings />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="*" element={<Navigate to="/" replace />} />
@@ -74,7 +78,14 @@ function App() {
               </div>
               <div className="contact-link">
                 <span className="contact-label">Visit Us</span>
-                <span className="contact-value">Jitbhumi Compound, Rilbong Junction Road, Shillong, Meghalaya 793004, India</span>
+                <a 
+                  href="https://www.google.com/maps/place/Optimum+Electricals/@25.568506,91.8714079,17z/data=!3m1!4b1!4m6!3m5!1s0x37507f0ebf943ba7:0x8af58b2c40d1aad9!8m2!3d25.568506!4d91.8714079!16s%2Fg%2F11w22069k9?entry=ttu&g_ep=EgoyMDI1MTAwMS4wIKXMDSoASAFQAw%3D%3D"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact-value contact-address-link"
+                >
+                  Jitbhumi Compound, Rilbong Junction Road, Shillong, Meghalaya 793004, India
+                </a>
               </div>
             </div>
           </div>

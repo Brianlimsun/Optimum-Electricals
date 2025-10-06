@@ -48,7 +48,6 @@ function MyBookings() {
                 <span className="book-text">My</span>
                 <span className="service-text"> Bookings</span>
               </h1>
-              <p className="greeting">No bookings saved yet.</p>
             </div>
           </div>
           <button onClick={() => navigate('/booking')} className="home-link">Book a Service</button>
@@ -69,7 +68,6 @@ function MyBookings() {
               <span className="book-text">My</span>
               <span className="service-text"> Bookings</span>
             </h1>
-            <p className="greeting">View details of your saved bookings.</p>
           </div>
         </div>
 

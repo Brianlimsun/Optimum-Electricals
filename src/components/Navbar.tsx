@@ -1,8 +1,43 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+
+  // Close menu on escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setMenuOpen(false)
+      }
+    }
+
+    if (menuOpen) {
+      document.addEventListener('keydown', handleEscape)
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+    }
+  }, [menuOpen])
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      if (menuOpen && !target.closest('.mobile-menu') && !target.closest('.hamburger')) {
+        setMenuOpen(false)
+      }
+    }
+
+    if (menuOpen) {
+      document.addEventListener('click', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [menuOpen])
 
   return (
     <header className="hero-nav">
@@ -25,15 +60,25 @@ function Navbar() {
         <nav className="nav-links">
           <Link to="/privacy-policy" className="nav-link">Privacy Policy</Link>
         </nav>
-        <button className="hamburger" aria-label="Open Menu" onClick={() => setMenuOpen((v) => !v)}>
+        <button 
+          className="hamburger" 
+          aria-label={menuOpen ? "Close Menu" : "Open Menu"} 
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
           <span />
           <span />
           <span />
         </button>
       </div>
       {menuOpen && (
-        <div className="mobile-menu" onClick={() => setMenuOpen(false)}>
-          <Link to="/privacy-policy" className="mobile-link">Privacy Policy</Link>
+        <div className="mobile-menu" onClick={(e) => e.stopPropagation()}>
+          <Link 
+            to="/privacy-policy" 
+            className="mobile-link"
+            onClick={() => setMenuOpen(false)}
+          >
+            Privacy Policy
+          </Link>
         </div>
       )}
     </header>

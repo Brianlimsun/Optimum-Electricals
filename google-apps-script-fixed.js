@@ -369,11 +369,11 @@ function doGet(e) {
     }
     
     // Default response
-    return createResponse({
-      message: 'Optimum Electricals Booking API is running',
-      timestamp: new Date().toISOString(),
-      method: 'GET'
-    });
+  return createResponse({
+    message: 'Optimum Electricals Booking API is running',
+    timestamp: new Date().toISOString(),
+    method: 'GET'
+  });
   } catch (error) {
     console.error('Error in doGet:', error);
     return createResponse({
