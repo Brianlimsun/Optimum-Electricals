@@ -1,0 +1,192 @@
+---
+alwaysApply: false
+---
+# React Cursor Rules
+
+Expert in TypeScript, React, Next.js App Router, Shadcn UI, Radix UI, Tailwind CSS.
+
+## Code Style
+- Functional and declarative programming; avoid classes
+- Descriptive names with auxiliary verbs (isLoading, hasError)
+- Structure: component, subcomponents, helpers, types
+- Directories: lowercase-with-dashes
+- Components: PascalCase with function keyword
+- Handlers: handle prefix (handleClick)
+- Hooks: use prefix (useAuth)
+
+## TypeScript
+- Interfaces over types
+- Avoid enums (use maps), avoid any (use unknown)
+- Always type props, state, and returns
+
+## Component Pattern
+```typescript
+interface Props {
+  userId: string;
+  onUpdate?: (user: User) => void;
+}
+
+export function UserProfile({ userId, onUpdate }: Props) {
+  // 1. Hooks first
+  const [user, setUser] = useState<User | null>(null);
+  
+  // 2. Derived state & memoization
+  const name = useMemo(() => `${user?.firstName} ${user?.lastName}`, [user]);
+  
+  // 3. Handlers
+  const handleUpdate = useCallback(() => {}, []);
+  
+  // 4. Effects last
+  useEffect(() => {}, [userId]);
+  
+  // 5. Early returns for errors/loading
+  if (!user) return <Spinner />;
+  
+  // 6. Main render
+  return <div>{name}</div>;
+}
+```
+
+## Key Principles
+- Favor React Server Components; minimize 'use client'
+- Use 'use client' only for: Web APIs, event listeners, browser-only features
+- Handle errors first, happy path last
+- Early returns over nested ifs
+- Use proper dependency arrays in hooks
+- Never mutate state directly
+- Never use index as key for dynamic lists
+
+## Performance
+- Wrap client components in Suspense
+- Dynamic import non-critical components
+- useMemo for expensive computations only
+- useCallback for functions passed to memoized children
+- Avoid inline functions in JSX
+
+## UI & Forms
+- Shadcn UI + Radix + Tailwind (mobile-first)
+- react-hook-form + Zod for validation
+- Semantic HTML, ARIA labels, keyboard nav
+- Show errors below inputs, disable submit during loading
+
+## Data Fetching
+```typescript
+const { data, isLoading, error } = useQuery({
+  queryKey: ['user', userId],
+  queryFn: () => fetchUser(userId),
+});
+
+if (isLoading) return <Skeleton />;
+if (error) return <Error />;
+```
+
+## State
+- useState for local, useReducer for complex
+- Context for global (theme, auth)
+- Zustand for app-wide state
+- Lift state only when needed
+
+## Security & A11y
+- Sanitize inputs, no dangerouslySetInnerHTML
+- httpOnly cookies for tokens
+- Semantic HTML, proper ARIA, alt text
+
+## Code Generation
+- Provide complete working code (no TODOs)
+- Include imports, types, loading/error states
+- Add accessibility features
+- Ask for clarification if unclear# React Cursor Rules
+
+Expert in TypeScript, React, Next.js App Router, Shadcn UI, Radix UI, Tailwind CSS.
+
+## Code Style
+- Functional and declarative programming; avoid classes
+- Descriptive names with auxiliary verbs (isLoading, hasError)
+- Structure: component, subcomponents, helpers, types
+- Directories: lowercase-with-dashes
+- Components: PascalCase with function keyword
+- Handlers: handle prefix (handleClick)
+- Hooks: use prefix (useAuth)
+
+## TypeScript
+- Interfaces over types
+- Avoid enums (use maps), avoid any (use unknown)
+- Always type props, state, and returns
+
+## Component Pattern
+```typescript
+interface Props {
+  userId: string;
+  onUpdate?: (user: User) => void;
+}
+
+export function UserProfile({ userId, onUpdate }: Props) {
+  // 1. Hooks first
+  const [user, setUser] = useState<User | null>(null);
+  
+  // 2. Derived state & memoization
+  const name = useMemo(() => `${user?.firstName} ${user?.lastName}`, [user]);
+  
+  // 3. Handlers
+  const handleUpdate = useCallback(() => {}, []);
+  
+  // 4. Effects last
+  useEffect(() => {}, [userId]);
+  
+  // 5. Early returns for errors/loading
+  if (!user) return <Spinner />;
+  
+  // 6. Main render
+  return <div>{name}</div>;
+}
+```
+
+## Key Principles
+- Favor React Server Components; minimize 'use client'
+- Use 'use client' only for: Web APIs, event listeners, browser-only features
+- Handle errors first, happy path last
+- Early returns over nested ifs
+- Use proper dependency arrays in hooks
+- Never mutate state directly
+- Never use index as key for dynamic lists
+
+## Performance
+- Wrap client components in Suspense
+- Dynamic import non-critical components
+- useMemo for expensive computations only
+- useCallback for functions passed to memoized children
+- Avoid inline functions in JSX
+
+## UI & Forms
+- Shadcn UI + Radix + Tailwind (mobile-first)
+- react-hook-form + Zod for validation
+- Semantic HTML, ARIA labels, keyboard nav
+- Show errors below inputs, disable submit during loading
+
+## Data Fetching
+```typescript
+const { data, isLoading, error } = useQuery({
+  queryKey: ['user', userId],
+  queryFn: () => fetchUser(userId),
+});
+
+if (isLoading) return <Skeleton />;
+if (error) return <Error />;
+```
+
+## State
+- useState for local, useReducer for complex
+- Context for global (theme, auth)
+- Zustand for app-wide state
+- Lift state only when needed
+
+## Security & A11y
+- Sanitize inputs, no dangerouslySetInnerHTML
+- httpOnly cookies for tokens
+- Semantic HTML, proper ARIA, alt text
+
+## Code Generation
+- Provide complete working code (no TODOs)
+- Include imports, types, loading/error states
+- Add accessibility features
+- Ask for clarification if unclear
