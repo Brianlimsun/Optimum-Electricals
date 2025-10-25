@@ -131,7 +131,7 @@ function Hero() {
             </a>
             <a 
               href="https://mybillbook.in/store/optimum_electricals" 
-              target="_blank" 
+              
               rel="noopener noreferrer"
               className="btn btn-ghost"
             >
