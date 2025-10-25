@@ -87,16 +87,7 @@ function PrivacyPolicy() {
               <p>We may update this Privacy Policy periodically to reflect changes in our practices or legal requirements. The "Effective Date" at the top of this page will indicate the latest version.</p>
             </section>
 
-            <section className="privacy-section">
-              <h2 className="section-title">8. Contact Us</h2>
-              <p>If you have any questions about this Privacy Policy or your personal data, please contact us:</p>
-              <div className="contact-info">
-                <p><strong>Optimum Electricals</strong></p>
-                <p>Jitbhumi Compound, Rilbong Junction Road, Shillong, 793004</p>
-                <p><a href="tel:+916033389808" className="contact-link">6033389808</a></p>
-                <p><a href="mailto:optimumbriansun@gmail.com" className="contact-link">optimumbriansun@gmail.com</a></p>
-              </div>
-            </section>
+            
           </div>
         </div>
       </main>

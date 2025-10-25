@@ -130,7 +130,14 @@ function Hero() {
             >
               Book Now
             </a>
-            <Link to="/privacy-policy" className="btn btn-ghost">Learn More</Link>
+            <a 
+              href="https://mybillbook.in/store/optimum_electricals" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="btn btn-ghost"
+            >
+              Shop Now
+            </a>
           </div>
           
           <div className="services-section">

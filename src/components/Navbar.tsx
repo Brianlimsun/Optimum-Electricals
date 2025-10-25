@@ -58,7 +58,8 @@ function Navbar() {
           <span className="brand-text">Optimum Electricals</span>
         </a>
         <nav className="nav-links">
-          <Link to="/privacy-policy" className="nav-link">Privacy Policy</Link>
+          <Link to="/about-us" className="nav-link">About Us</Link>
+          <Link to="/blog" className="nav-link">Blog</Link>
         </nav>
         <button 
           className="hamburger" 
@@ -73,11 +74,18 @@ function Navbar() {
       {menuOpen && (
         <div className="mobile-menu" onClick={(e) => e.stopPropagation()}>
           <Link 
-            to="/privacy-policy" 
+            to="/about-us" 
             className="mobile-link"
             onClick={() => setMenuOpen(false)}
           >
-            Privacy Policy
+            About Us
+          </Link>
+          <Link 
+            to="/blog" 
+            className="mobile-link"
+            onClick={() => setMenuOpen(false)}
+          >
+            Blog
           </Link>
         </div>
       )}
