@@ -1,4 +1,4 @@
-const APPS_SCRIPT_URL = import.meta.env.VITE_APPS_SCRIPT_WEBHOOK;
+const APPS_SCRIPT_URL = import.meta.env.VITE_APPS_SCRIPT_WEBHOOK || 'https://script.google.com/macros/s/AKfycbz1HdD7qBhLSP6FxkXDkXRnPXaFw3HJ23KoZmEHp3QNVB_dH3IEQov2A7Ox58yO7IEc/exec';
 console.log('🔌 API URL configured as:', APPS_SCRIPT_URL);
 
 
