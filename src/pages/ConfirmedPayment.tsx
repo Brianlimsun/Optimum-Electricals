@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CheckCircle, Calendar, Clock, MapPin, Home } from 'lucide-react'
 import Navbar from '../components/Navbar'

@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, useLocation, Link } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Hero from './components/Hero'
 import Testimonials from './components/Testimonials'
 import FAQ from './components/FAQ'
