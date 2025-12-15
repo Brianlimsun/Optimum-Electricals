@@ -87,7 +87,7 @@ function PaymentConfirmation() {
       left: 0,
       behavior: 'auto'
     })
-    
+
     // Get payment data from sessionStorage (passed from booking form)
     const storedData = sessionStorage.getItem('bookingData')
     if (storedData) {
@@ -174,7 +174,7 @@ function PaymentConfirmation() {
       // Store payment data for confirmed payment page
       sessionStorage.setItem('confirmedPaymentData', JSON.stringify(finalData))
       sessionStorage.removeItem('bookingData')
-      
+
       // Navigate to confirmed payment page
       navigate('/confirmed-payment')
     } catch (err) {
@@ -194,9 +194,9 @@ function PaymentConfirmation() {
           <div className="error-container">
             <div className="error-icon">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"/>
-                <line x1="15" y1="9" x2="9" y2="15"/>
-                <line x1="9" y1="9" x2="15" y2="15"/>
+                <circle cx="12" cy="12" r="10" />
+                <line x1="15" y1="9" x2="9" y2="15" />
+                <line x1="9" y1="9" x2="15" y2="15" />
               </svg>
             </div>
             <h2 className="error-title">No Booking Found</h2>
@@ -233,120 +233,120 @@ function PaymentConfirmation() {
           </div>
         </div>
 
-      <div className="payment-content">
-        <div className="booking-summary">
-          <h3>
-            <CheckCircle className="icon" />
-            <span>Booking Summary</span>
-          </h3>
-          <div className="summary-details">
-            <div className="summary-item">
-              <span className="label">Service Date:</span>
-              <span className="value">{paymentData.bookingDate}</span>
-            </div>
-            <div className="summary-item">
-              <span className="label">Time Slot:</span>
-              <span className="value">{paymentData.preferredTimeSlot}</span>
-            </div>
-            <div className="summary-item">
-              <span className="label">Location:</span>
-              <span className="value">{paymentData.locality}</span>
-            </div>
-            <div className="summary-item">
-              <span className="label">Problem:</span>
-              <span className="value">{paymentData.problemDescription}</span>
+        <div className="payment-content">
+          <div className="booking-summary">
+            <h3>
+              <CheckCircle className="icon" />
+              <span>Booking Summary</span>
+            </h3>
+            <div className="summary-details">
+              <div className="summary-item">
+                <span className="label">Service Date:</span>
+                <span className="value">{paymentData.bookingDate}</span>
+              </div>
+              <div className="summary-item">
+                <span className="label">Time Slot:</span>
+                <span className="value">{paymentData.preferredTimeSlot}</span>
+              </div>
+              <div className="summary-item">
+                <span className="label">Location:</span>
+                <span className="value">{paymentData.locality}</span>
+              </div>
+              <div className="summary-item">
+                <span className="label">Problem:</span>
+                <span className="value">{paymentData.problemDescription}</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="payment-section">
-          <h3>
-            <CreditCard className="icon" />
-            <span>Payment Details</span>
-          </h3>
-          
-          <div className="amount-display">
-            <div className="amount-breakdown">
-              <div className="amount-item">
-                <span>Locality Fee ({paymentData.locality})</span>
-                <span>₹{paymentData.totalFee - (paymentData.isUrgent ? 50 : 0)}</span>
-              </div>
-              {paymentData.isUrgent && (
-                <div className="amount-item urgent">
-                  <span>Urgent Same Day</span>
-                  <span>₹50</span>
+          <div className="payment-section">
+            <h3>
+              <CreditCard className="icon" />
+              <span>Payment Details</span>
+            </h3>
+
+            <div className="amount-display">
+              <div className="amount-breakdown">
+                <div className="amount-item">
+                  <span>Locality Fee ({paymentData.locality})</span>
+                  <span>₹{paymentData.totalFee - (paymentData.isUrgent ? 50 : 0)}</span>
                 </div>
-              )}
-              <div className="amount-total">
-                <span>Total Amount</span>
-                <span>₹{paymentData.totalFee}</span>
+                {paymentData.isUrgent && (
+                  <div className="amount-item urgent">
+                    <span>Urgent Same Day</span>
+                    <span>₹50</span>
+                  </div>
+                )}
+                <div className="amount-total">
+                  <span>Total Amount</span>
+                  <span>₹{paymentData.totalFee}</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="qr-payment">
-            <h4>Scan QR Code to Pay</h4>
-            <div className="qr-container">
-              <div className="qr-code">
-                <img src="./qrcode.png" alt="UPI Payment QR Code" className="qr-image" />
+            <div className="qr-payment">
+              <h4>Scan QR Code to Pay</h4>
+              <div className="qr-container">
+                <div className="qr-code">
+                  <img src="./qrcode.png" alt="UPI Payment QR Code" className="qr-image" />
+                </div>
+                <div className="upi-details">
+                  <div className="upi-id-row">
+                    <span className="upi-id">UPI: 6033389808@okbizaxis</span>
+                    <button type="button" className="copy-upi-btn" onClick={handleCopyUpi} aria-label="Copy UPI ID">
+                      {copied ? 'Copied' : 'Copy'}
+                    </button>
+                  </div>
+                  <p className="payment-note">Please pay the exact amount: ₹{paymentData.totalFee}</p>
+                </div>
               </div>
-              <div className="upi-details">
-                <div className="upi-id-row">
-                  <span className="upi-id">UPI: 6033389808@okbizaxis</span>
-                  <button type="button" className="copy-upi-btn" onClick={handleCopyUpi} aria-label="Copy UPI ID">
-                    {copied ? 'Copied' : 'Copy'}
+            </div>
+
+            <div className="screenshot-upload">
+              <h4>
+                <Upload className="icon" />
+                <span>Upload Payment Screenshot</span>
+              </h4>
+              <p className="upload-instruction">
+                Upload payment screenshot after payment.
+              </p>
+
+              {!screenshotPreview ? (
+                <div className="upload-area">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleScreenshotUpload}
+                    id="screenshot-upload"
+                  />
+                  <label htmlFor="screenshot-upload" className="upload-label">
+                    <Upload className="upload-icon" />
+                    <span>Upload or take payment screenshot</span>
+                    <span className="file-types">PNG, JPG</span>
+                  </label>
+                </div>
+              ) : (
+                <div className="screenshot-preview">
+                  <img src={screenshotPreview} alt="Payment screenshot" />
+                  <button type="button" onClick={removeScreenshot} className="remove-screenshot">
+                    Remove
                   </button>
                 </div>
-                <p className="payment-note">Please pay the exact amount: ₹{paymentData.totalFee}</p>
-              </div>
+              )}
             </div>
+
+            {error && <div className="error-message">{error}</div>}
+
+            <button
+              onClick={handleFinalSubmit}
+              disabled={submitting || !paymentScreenshot}
+              className="confirm-payment-btn"
+            >
+              {submitting ? 'Confirming...' : 'Confirm Booking'}
+            </button>
           </div>
-
-          <div className="screenshot-upload">
-            <h4>
-              <Upload className="icon" />
-              <span>Upload Payment Screenshot</span>
-            </h4>
-            <p className="upload-instruction">
-              Upload payment screenshot after payment.
-            </p>
-            
-            {!screenshotPreview ? (
-              <div className="upload-area">
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  onChange={handleScreenshotUpload}
-                  id="screenshot-upload"
-                />
-                <label htmlFor="screenshot-upload" className="upload-label">
-                  <Upload className="upload-icon" />
-                  <span>Upload or take payment screenshot</span>
-                  <span className="file-types">PNG, JPG</span>
-                </label>
-              </div>
-            ) : (
-              <div className="screenshot-preview">
-                <img src={screenshotPreview} alt="Payment screenshot" />
-                <button type="button" onClick={removeScreenshot} className="remove-screenshot">
-                  Remove
-                </button>
-              </div>
-            )}
-          </div>
-
-          {error && <div className="error-message">{error}</div>}
-
-          <button 
-            onClick={handleFinalSubmit} 
-            disabled={submitting || !paymentScreenshot}
-            className="confirm-payment-btn"
-          >
-            {submitting ? 'Confirming...' : 'Confirm Booking'}
-          </button>
         </div>
       </div>
-    </div>
     </div>
   )
 }

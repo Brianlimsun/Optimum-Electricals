@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { MapPin, Clock, Camera, CheckCircle } from 'lucide-react'
+import { useAuth } from '../contexts/AuthContext'
 import Navbar from '../components/Navbar'
 import DatePicker from '../components/DatePicker'
 import CustomDropdown from '../components/CustomDropdown'
@@ -41,10 +42,14 @@ function compressImage(file: File, maxSize = 800, quality = 0.6): Promise<string
   })
 }
 
-function BookingForm() {
+export default function BookingForm() {
   const navigate = useNavigate()
-  const [name, setName] = useState('')
-  const [phone, setPhone] = useState('')
+  const { user, profile } = useAuth()
+
+  // Use profile data if available, otherwise form state
+  // const [name, setName] = useState('') // REMOVED
+  // const [phone, setPhone] = useState('') // REMOVED
+
   const [locality, setLocality] = useState('')
   const [landmark, setLandmark] = useState('')
   const [address, setAddress] = useState('')
@@ -58,6 +63,21 @@ function BookingForm() {
   const [availableTimeSlots, setAvailableTimeSlots] = useState<string[]>([])
   const [loadingTimeSlots, setLoadingTimeSlots] = useState(false)
   const [showDatePicker, setShowDatePicker] = useState(false)
+
+  // Redirect logic: Enforce Authentication
+  useEffect(() => {
+    if (!user) {
+      // Redirect to login if not authenticated
+      navigate('/login', { state: { from: '/booking' } });
+      return;
+    }
+
+    // If authenticated but no profile, redirect to complete profile
+    if (profile === null) {
+      navigate('/complete-profile');
+    }
+  }, [user, profile, navigate]);
+
 
   const localityOptions = [
     { name: 'Bara Bazar', fee: 300 },
@@ -121,34 +141,34 @@ function BookingForm() {
 
     setLoadingTimeSlots(true)
     console.log('🔍 Checking time slots for date:', date)
-    
+
     try {
       // Get webhook URL from environment
       const webhookUrl = import.meta.env.VITE_APPS_SCRIPT_WEBHOOK
       console.log('🌐 Webhook URL configured:', !!webhookUrl)
       console.log('🔗 Webhook URL:', webhookUrl)
-      
+
       if (!webhookUrl) {
         console.error('❌ Google Apps Script Webhook URL is not configured')
         console.log('📋 Falling back to showing all slots as available')
         setAvailableTimeSlots(allTimeSlots)
         return
       }
-      
+
       const apiUrl = `${webhookUrl}?action=getAvailableTimeSlots&date=${encodeURIComponent(date)}`
       console.log('🚀 Making API call to:', apiUrl)
-      
+
       // Fetch available time slots from Google Sheets
       const response = await fetch(apiUrl)
       console.log('📡 Response status:', response.status, response.statusText)
-      
+
       const data = await response.json()
       console.log('📊 API Response:', data)
-      
+
       if (data.success) {
         console.log('✅ Successfully fetched time slots:', data.availableTimeSlots)
         setAvailableTimeSlots(data.availableTimeSlots || [])
-        
+
         // If current selection is no longer available, clear it
         if (timeSlot && !data.availableTimeSlots.includes(timeSlot)) {
           setTimeSlot('')
@@ -169,17 +189,7 @@ function BookingForm() {
     }
   }
 
-  useEffect(() => {
-    // Pre-fill from LeadCapture if available
-    try {
-      const raw = sessionStorage.getItem('lead')
-      if (raw) {
-        const lead = JSON.parse(raw) as { name?: string; phone?: string }
-        if (lead?.name) setName(lead.name)
-        if (lead?.phone) setPhone(lead.phone)
-      }
-    } catch {}
-  }, [])
+
 
   // Check available time slots when booking date changes
   useEffect(() => {
@@ -196,11 +206,11 @@ function BookingForm() {
     const month = String(today.getMonth() + 1).padStart(2, '0')
     const day = String(today.getDate()).padStart(2, '0')
     const todayString = `${year}-${month}-${day}`
-    
+
     console.log('Booking date:', bookingDate)
     console.log('Today string:', todayString)
     console.log('Is today?', bookingDate === todayString)
-    
+
     return bookingDate === todayString
   }, [bookingDate])
 
@@ -208,7 +218,7 @@ function BookingForm() {
     const localityFee = 300 // Standard fee for all localities
     const urgentFee = isToday ? 50 : 0
     const baseTotal = localityFee + urgentFee
-    
+
     // Apply discounts
     let discount = 0
     if (locality === 'Rilbong') {
@@ -216,14 +226,11 @@ function BookingForm() {
     } else if (locality) {
       discount = 100 // Standard discount for all other localities
     }
-    
+
     return Math.max(0, baseTotal - discount) // Ensure total doesn't go below 0
   }, [locality, isToday])
 
   function validate(): string | null {
-    const phoneDigits = phone.replace(/\D/g, '')
-    if (!name.trim()) return 'Name is required'
-    if (phoneDigits.length !== 10) return 'Enter a 10-digit phone number'
     if (!locality.trim()) return 'Locality is required'
     if (!address.trim()) return 'Full address is required'
     if (!problem.trim()) return 'Problem description is required'
@@ -286,8 +293,9 @@ function BookingForm() {
       )
 
       const submissionData = {
-        customerName: name,
-        customerPhone: phone,
+        customerName: profile?.name || '',
+        customerPhone: profile?.phone || '',
+        userId: user?.uid || 'GUEST',
         locality: locality,
         landmark: landmark,
         fullAddress: address,
@@ -323,7 +331,7 @@ function BookingForm() {
         }
         sessionStorage.setItem('bookingData', JSON.stringify(smallerSubmissionData))
       }
-      
+
       // Navigate to payment page using React Router
       navigate('/payment')
     } catch (err: any) {
@@ -347,130 +355,140 @@ function BookingForm() {
           </div>
         </div>
 
-      {success && (
-        <div className="success-message">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <CheckCircle className="w-5 h-5" />
-            <span style={{ fontWeight: '500' }}>Booking submitted successfully!</span>
-          </div>
-          <p style={{ marginTop: '4px', fontSize: '14px' }}>We'll contact you shortly to confirm your appointment.</p>
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} noValidate className="booking-form-content">
-        <div>
-          <h3 className="section-title">
-            <MapPin className="icon" />
-            <span>Location Details</span>
-          </h3>
-              <div className="form-group">
-                <label>Locality *</label>
-                <CustomDropdown
-                  options={localityDropdownOptions}
-                  value={locality}
-                  onChange={setLocality}
-                  placeholder="Select locality"
-                />
-                {locality && (
-                  <div className="selected-locality">
-                    Selected: {locality} - ₹300
-                  </div>
-                )}
-              </div>
-              <div className="form-group">
-                <label>Landmark</label>
-                <input 
-                  value={landmark} 
-                  onChange={(e) => setLandmark(e.target.value)}
-                  placeholder="e.g., Near City Mall"
-                />
-              </div>
-              <div className="form-group">
-                <label>Full Address *</label>
-                <textarea 
-                  value={address} 
-                  onChange={(e) => setAddress(e.target.value)} 
-                  rows={3}
-                  placeholder="House/flat number, street, area..."
-                />
-              </div>
-        </div>
-
-        <div className="form-group">
-          <label>Problem Description *</label>
-          <textarea 
-            value={problem} 
-            onChange={(e) => setProblem(e.target.value)} 
-            rows={4}
-            placeholder="Describe your electrical issue..."
-          />
-        </div>
-
-        {/* Booking Date */}
-        <div className="form-group">
-          <h3 className="section-title">
-            <Clock className="icon" />
-            <span>Booking Date *</span>
-          </h3>
-          <div 
-            className="date-input-field"
-            onClick={() => setShowDatePicker(true)}
-          >
-            <span className="date-display">
-              {bookingDate ? new Date(bookingDate).toLocaleDateString('en-US', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-              }) : 'Select a date'}
-            </span>
-          </div>
-          {isToday && (
-            <div className="urgent-badge">
-              <span className="urgent-icon">⚡</span>
-              <span>Urgent - Same Day Booking (+₹50)</span>
+        {success && (
+          <div className="success-message">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <CheckCircle className="w-5 h-5" />
+              <span style={{ fontWeight: '500' }}>Booking submitted successfully!</span>
             </div>
-          )}
-        </div>
+            <p style={{ marginTop: '4px', fontSize: '14px' }}>We'll contact you shortly to confirm your appointment.</p>
+          </div>
+        )}
 
-        <div className="form-group">
-          <h3 className="section-title">
-            <Clock className="icon" />
-            <span>Preferred Time Slot *</span>
-          </h3>
-          <CustomDropdown
-            options={timeSlotDropdownOptions}
-            value={timeSlot}
-            onChange={setTimeSlot}
-            placeholder={
-              loadingTimeSlots 
-                ? 'Checking availability...' 
-                : availableTimeSlots.length === 0 
-                  ? 'No slots available for this date' 
-                  : 'Select preferred time'
-            }
-          />
-          {bookingDate && availableTimeSlots.length === 0 && (
-            <div className="no-slots-message">
-              <p>All time slots are booked for this date. Please choose a different date.</p>
+        <form onSubmit={handleSubmit} noValidate className="booking-form-content">
+          <div>
+            <h3 className="section-title">
+              <MapPin className="icon" />
+              <span>Location Details</span>
+            </h3>
+            <div className="form-group">
+              <label>Locality *</label>
+              <CustomDropdown
+                options={localityDropdownOptions}
+                value={locality}
+                onChange={setLocality}
+                placeholder="Select locality"
+              />
+              {locality && (
+                <div className="selected-locality">
+                  Selected: {locality} - ₹300
+                </div>
+              )}
+              {/* Contact Details - Loading State */}
+              {user && profile === undefined && (
+                <div className="form-group" style={{ padding: '16px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '14px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', border: '1px dashed var(--border)' }}>
+                  Loading your contact details...
+                </div>
+              )}
+
+
             </div>
-          )}
-        </div>
 
-        <div className="form-group">
-          <h3 className="section-title">
-            <Camera className="icon" />
-            <span>Upload Photos of Issue (Optional - Max {MAX_IMAGES})</span>
-          </h3>
-          <div className="image-upload">
-            <input 
-              type="file" 
-              accept="image/*" 
-              multiple 
-              onChange={(e) => handleFiles(e.target.files)} 
-              disabled={!canAddMore} 
-              id="image-upload" 
-            />
+            <div className="form-group">
+              <label>Landmark (Optional)</label>
+              <input
+                type="text"
+                value={landmark}
+                onChange={(e) => setLandmark(e.target.value)}
+                placeholder="E.g., Near St. Mary's School"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Full Address *</label>
+              <textarea
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                rows={2}
+                placeholder="House No., Street, Building..."
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Problem Description *</label>
+              <textarea
+                value={problem}
+                onChange={(e) => setProblem(e.target.value)}
+                rows={4}
+                placeholder="Describe your electrical issue..."
+              />
+            </div>
+
+            {/* Booking Date */}
+            <div className="form-group">
+              <h3 className="section-title">
+                <Clock className="icon" />
+                <span>Booking Date *</span>
+              </h3>
+              <div
+                className="date-input-field"
+                onClick={() => setShowDatePicker(true)}
+              >
+                <span className="date-display">
+                  {bookingDate ? new Date(bookingDate).toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  }) : 'Select a date'}
+                </span>
+              </div>
+              {isToday && (
+                <div className="urgent-badge">
+                  <span className="urgent-icon">⚡</span>
+                  <span>Urgent - Same Day Booking (+₹50)</span>
+                </div>
+              )}
+            </div>
+
+            <div className="form-group">
+              <h3 className="section-title">
+                <Clock className="icon" />
+                <span>Preferred Time Slot *</span>
+              </h3>
+              <CustomDropdown
+                options={timeSlotDropdownOptions}
+                value={timeSlot}
+                onChange={setTimeSlot}
+                placeholder={
+                  loadingTimeSlots
+                    ? 'Checking availability...'
+                    : availableTimeSlots.length === 0
+                      ? 'No slots available for this date'
+                      : 'Select preferred time'
+                }
+              />
+              {bookingDate && availableTimeSlots.length === 0 && (
+                <div className="no-slots-message">
+                  <p>All time slots are booked for this date. Please choose a different date.</p>
+                </div>
+              )}
+            </div>
+
+            <div className="form-group">
+              <h3 className="section-title">
+                <Camera className="icon" />
+                <span>Upload Photos of Issue (Optional - Max {MAX_IMAGES})</span>
+              </h3>
+              <div className="image-upload">
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) => handleFiles(e.target.files)}
+                  disabled={!canAddMore}
+                  id="image-upload"
+                />
                 <label htmlFor="image-upload" className="upload-content">
                   <Camera className="icon" />
                   <div className="upload-text">
@@ -478,69 +496,66 @@ function BookingForm() {
                     <span className="file-types">PNG, JPG</span>
                   </div>
                 </label>
-          </div>
-
-          {images.length > 0 && (
-            <div className="image-previews">
-              {images.map((img) => (
-                <div key={img.id} className="image-preview">
-                  <img src={img.previewUrl} alt="Upload preview" />
-                  <button type="button" onClick={() => removeImage(img.id)} className="remove-image">×</button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {error && <div className="error-message">{error}</div>}
-
-        {/* Total Fee Display */}
-        {totalFee > 0 && (
-          <div className="total-fee-section">
-            <div className="fee-breakdown">
-              <div className="fee-item">
-                <span>Locality Fee ({locality})</span>
-                <span>₹300</span>
               </div>
-              {isToday && (
-                <div className="fee-item urgent-fee">
-                  <span>Urgent Same Day</span>
-                  <span>₹50</span>
+
+              {images.length > 0 && (
+                <div className="image-previews">
+                  {images.map((img) => (
+                    <div key={img.id} className="image-preview">
+                      <img src={img.previewUrl} alt="Upload preview" />
+                      <button type="button" onClick={() => removeImage(img.id)} className="remove-image">×</button>
+                    </div>
+                  ))}
                 </div>
               )}
-              {locality && (
-                <div className="fee-item discount">
-                  <span>Discount ({locality === 'Rilbong' ? 'Special' : 'Standard'})</span>
-                  <span>-₹{locality === 'Rilbong' ? '200' : '100'}</span>
-                </div>
-              )}
-              <div className="fee-total">
-                <span>Total Amount</span>
-                <span>₹{totalFee}</span>
-              </div>
             </div>
+
+            {error && <div className="error-message">{error}</div>}
+
+            {/* Total Fee Display */}
+            {totalFee > 0 && (
+              <div className="total-fee-section">
+                <div className="fee-breakdown">
+                  <div className="fee-item">
+                    <span>Locality Fee ({locality})</span>
+                    <span>₹300</span>
+                  </div>
+                  {isToday && (
+                    <div className="fee-item urgent-fee">
+                      <span>Urgent Same Day</span>
+                      <span>₹50</span>
+                    </div>
+                  )}
+                  {locality && (
+                    <div className="fee-item discount">
+                      <span>Discount ({locality === 'Rilbong' ? 'Special' : 'Standard'})</span>
+                      <span>-₹{locality === 'Rilbong' ? '200' : '100'}</span>
+                    </div>
+                  )}
+                  <div className="fee-total">
+                    <span>Total Amount</span>
+                    <span>₹{totalFee}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <button type="submit" disabled={submitting} className="submit-btn">
+              {submitting ? 'Processing…' : `Proceed to Payment${totalFee > 0 ? ` - ₹${totalFee}` : ''}`}
+            </button>
           </div>
+        </form>
+
+        {/* Custom DatePicker Modal */}
+        {showDatePicker && (
+          <DatePicker
+            value={bookingDate}
+            onChange={setBookingDate}
+            onClose={() => setShowDatePicker(false)}
+            minDate={new Date().toISOString().split('T')[0]}
+          />
         )}
-
-        <button type="submit" disabled={submitting} className="submit-btn">
-          {submitting ? 'Processing…' : `Proceed to Payment${totalFee > 0 ? ` - ₹${totalFee}` : ''}`}
-        </button>
-      </form>
-
-      {/* Custom DatePicker Modal */}
-      {showDatePicker && (
-        <DatePicker
-          value={bookingDate}
-          onChange={setBookingDate}
-          onClose={() => setShowDatePicker(false)}
-          minDate={new Date().toISOString().split('T')[0]}
-        />
-      )}
       </div>
     </div>
   )
 }
-
-export default BookingForm
-
-

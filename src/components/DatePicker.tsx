@@ -9,12 +9,12 @@ interface DatePickerProps {
   maxDate?: string
 }
 
-const DatePicker: React.FC<DatePickerProps> = ({ 
-  value, 
-  onChange, 
-  onClose, 
-  minDate, 
-  maxDate 
+const DatePicker: React.FC<DatePickerProps> = ({
+  value,
+  onChange,
+  onClose,
+  minDate,
+  maxDate
 }) => {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [hoveredDate, setHoveredDate] = useState<number | null>(null)
@@ -76,14 +76,14 @@ const DatePicker: React.FC<DatePickerProps> = ({
     const month = String(date.getMonth() + 1).padStart(2, '0')
     const dayStr = String(date.getDate()).padStart(2, '0')
     const dateString = `${year}-${month}-${dayStr}`
-    
+
     if (minDate && dateString < minDate) return true
     if (maxDate && dateString > maxDate) return true
-    
+
     // Compare with today's date (local)
     const todayString = today.toISOString().split('T')[0]
     if (dateString < todayString) return true
-    
+
     return false
   }
 
@@ -91,26 +91,26 @@ const DatePicker: React.FC<DatePickerProps> = ({
   const isDateSelected = (day: number) => {
     if (!tempSelectedDate) return false
     const tempDate = new Date(tempSelectedDate)
-    return tempDate.getDate() === day && 
-           tempDate.getMonth() === currentDate.getMonth() && 
-           tempDate.getFullYear() === currentDate.getFullYear()
+    return tempDate.getDate() === day &&
+      tempDate.getMonth() === currentDate.getMonth() &&
+      tempDate.getFullYear() === currentDate.getFullYear()
   }
 
   // Check if date is today
   const isToday = (day: number) => {
-    return today.getDate() === day && 
-           today.getMonth() === currentDate.getMonth() && 
-           today.getFullYear() === currentDate.getFullYear()
+    return today.getDate() === day &&
+      today.getMonth() === currentDate.getMonth() &&
+      today.getFullYear() === currentDate.getFullYear()
   }
 
   // Format selected date for display
   const formatSelectedDate = () => {
     if (!tempSelectedDate) return 'Select a date'
     const tempDate = new Date(tempSelectedDate)
-    const options: Intl.DateTimeFormatOptions = { 
-      weekday: 'long', 
-      day: 'numeric', 
-      month: 'long' 
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long'
     }
     return tempDate.toLocaleDateString('en-US', options)
   }
@@ -142,8 +142,8 @@ const DatePicker: React.FC<DatePickerProps> = ({
         <div className="calendar-card">
           {/* Calendar Header */}
           <div className="calendar-header">
-            <button 
-              className="calendar-nav-btn" 
+            <button
+              className="calendar-nav-btn"
               onClick={goToPreviousMonth}
               aria-label="Previous month"
             >
@@ -152,8 +152,8 @@ const DatePicker: React.FC<DatePickerProps> = ({
             <h3 className="calendar-month-year">
               {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
             </h3>
-            <button 
-              className="calendar-nav-btn" 
+            <button
+              className="calendar-nav-btn"
               onClick={goToNextMonth}
               aria-label="Next month"
             >
@@ -220,8 +220,8 @@ const DatePicker: React.FC<DatePickerProps> = ({
             <button className="calendar-btn cancel-btn" onClick={onClose}>
               Cancel
             </button>
-            <button 
-              className="calendar-btn choose-btn" 
+            <button
+              className="calendar-btn choose-btn"
               onClick={handleChooseDate}
               disabled={!tempSelectedDate}
             >

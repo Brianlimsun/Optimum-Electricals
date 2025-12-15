@@ -42,20 +42,20 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     setSearchTerm(inputValue);
-    
+
     // Always open dropdown when user starts typing
     if (!isOpen) {
       setIsOpen(true);
     }
-    
+
     // Filter options with the new search term
     const currentFilteredOptions = options.filter(option =>
       option.label.toLowerCase().includes(inputValue.toLowerCase())
     );
-    
+
     // If user is typing and there's an exact match, auto-select it
     if (inputValue && currentFilteredOptions.length > 0) {
-      const exactMatch = currentFilteredOptions.find(option => 
+      const exactMatch = currentFilteredOptions.find(option =>
         option.label.toLowerCase() === inputValue.toLowerCase()
       );
       if (exactMatch) {
@@ -137,7 +137,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({
         menu.addEventListener('scroll', handleScroll);
         menu.addEventListener('touchstart', handleTouchStart);
         menu.addEventListener('touchend', handleTouchEnd);
-        
+
         // Cleanup
         return () => {
           menu.removeEventListener('scroll', handleScroll);
