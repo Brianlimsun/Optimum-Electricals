@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
+// https://vite.dev/config/ - Triggering deployment update
 export default defineConfig({
   // Use root path for custom domain compatibility
   // The React Router will handle the basename dynamically
