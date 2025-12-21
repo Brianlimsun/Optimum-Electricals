@@ -3,49 +3,64 @@ import { motion } from "framer-motion";
 
 const testimonials = [
   {
-    text: "Optimum Electricals transformed our home's electrical system completely. Their team was professional, punctual, and the quality of work exceeded our expectations. Highly recommended!",
-    name: "Priya Sharma",
+    text: "Rewired our whole place and the difference is huge. They showed up on time and didn't leave a mess.",
+    name: "Rynjah Marbaniang",
     role: "Homeowner",
   },
   {
-    text: "We had an emergency electrical issue at 2 AM, and Optimum Electricals responded immediately. Their 24/7 service saved us from a potential disaster. Truly reliable!",
-    name: "Rajesh Kumar",
+    text: "Called at 2 AM when the power died and they actually came out. Had it fixed pretty fast. Lifesavers.",
+    name: "Priya Sharma",
     role: "Business Owner",
   },
   {
-    text: "The team installed new power points throughout our office and the work was flawless. Clean, efficient, and completed on time. Great value for money!",
-    name: "Anita Das",
+    text: "Put in a few new outlets for us. Quick, clean work, and the price was fair.",
+    name: "Laitphar Lyngdoh",
     role: "Office Manager",
   },
   {
-    text: "Optimum Electricals upgraded our entire lighting system and the difference is amazing. Modern, energy-efficient, and beautifully installed. Very satisfied!",
+    text: "The new lighting setup looks awesome. It's way brighter in here and saves on energy too.",
     name: "Suresh Mehta",
     role: "Property Manager",
   },
   {
-    text: "Their safety inspection was thorough and professional. They identified several issues we weren't aware of and fixed them promptly. Peace of mind guaranteed!",
-    name: "Deepika Singh",
+    text: "Did a safety check and found some stuff I completely missed. Glad we caught it before it became a real problem.",
+    name: "Pynskhem Khongwir",
+    role: "Resident",
+  },
+  {
+    text: "The electrician was super polite and clearly knew his stuff. Just a really smooth experience.",
+    name: "Anita Das",
     role: "Homeowner",
   },
   {
-    text: "From consultation to completion, Optimum Electricals provided excellent service. Their electricians are skilled, courteous, and always on time. Five stars!",
-    name: "Vikram Patel",
-    role: "Restaurant Owner",
+    text: "Wired up the new house exactly how we asked. Everything works great and didn't break the bank.",
+    name: "Merina Lyngdoh",
+    role: "Store Manager",
   },
   {
-    text: "We needed complete home wiring for our new house. Optimum Electricals delivered exactly what they promised - quality work at competitive prices. Highly recommended!",
-    name: "Arjun Thapa",
-    role: "New Homeowner",
+    text: "Booking online was effortless. The technician was respectful and got the job done without any fuss.",
+    name: "Banalari Marbaniang",
+    role: "Local Resident",
   },
   {
-    text: "Their online booking system made it so easy to schedule our electrical repairs. Professional service from start to finish. Will definitely use them again!",
-    name: "Meera Joshi",
+    text: "Figured out why our power kept tripping and fixed it. Knew exactly what to look for.",
+    name: "Phyrnai Nongrum",
     role: "Customer",
   },
   {
-    text: "Optimum Electricals fixed our power issues quickly and efficiently. Their team is knowledgeable, trustworthy, and the pricing is very reasonable. Excellent service!",
-    name: "Rohit Agarwal",
-    role: "Shop Owner",
+    text: "You can tell they care about the details. They even cleaned up the dust after drilling. really appreciated that.",
+    name: "Aarav Khanna",
+    role: "Architect",
+  },
+  {
+    text: "I liked that the price they quoted was the price I paid. No hidden fees or surprises at the end.",
+    name: "Nikhil Bansal",
+    role: "Project Manager",
+  },
+  {
+    text: "Really solid work. The guys were respectful of my home and got everything working perfect.",
+    name: "Aditya Rao",
+    role: "Homeowner",
   },
 ];
 
@@ -54,9 +69,9 @@ const createExtendedTestimonials = (testimonialsArray: typeof testimonials) => {
   return [...testimonialsArray, ...testimonialsArray, ...testimonialsArray, ...testimonialsArray];
 };
 
-const firstColumn = createExtendedTestimonials(testimonials.slice(0, 3));
-const secondColumn = createExtendedTestimonials(testimonials.slice(3, 6));
-const thirdColumn = createExtendedTestimonials(testimonials.slice(6, 9));
+const firstColumn = createExtendedTestimonials(testimonials.slice(0, 4));
+const secondColumn = createExtendedTestimonials(testimonials.slice(4, 8));
+const thirdColumn = createExtendedTestimonials(testimonials.slice(8, 12));
 
 const Testimonials = () => {
   return (
@@ -92,11 +107,11 @@ const Testimonials = () => {
             >
               {firstColumn.map((testimonial, index) => (
                 <div key={index} className="testimonial-card">
-                  <p className="testimonial-text">{testimonial.text}</p>
+                  <p className="testimonial-text" style={{ fontSize: '14px' }}>{testimonial.text}</p>
                   <div className="testimonial-author">
-                    <div className="testimonial-info" style={{ marginLeft: 0 }}>
-                      <div className="testimonial-name">{testimonial.name}</div>
-                      <div className="testimonial-role">{testimonial.role}</div>
+                    <div className="testimonial-info" style={{ marginLeft: 0, textAlign: 'left', alignItems: 'flex-start' }}>
+                      <div className="testimonial-name" style={{ textAlign: 'left' }}>{testimonial.name}</div>
+                      <div className="testimonial-role" style={{ textAlign: 'left' }}>{testimonial.role}</div>
                     </div>
                   </div>
                 </div>
@@ -119,11 +134,11 @@ const Testimonials = () => {
             >
               {secondColumn.map((testimonial, index) => (
                 <div key={index} className="testimonial-card">
-                  <p className="testimonial-text">{testimonial.text}</p>
+                  <p className="testimonial-text" style={{ fontSize: '14px' }}>{testimonial.text}</p>
                   <div className="testimonial-author">
-                    <div className="testimonial-info" style={{ marginLeft: 0 }}>
-                      <div className="testimonial-name">{testimonial.name}</div>
-                      <div className="testimonial-role">{testimonial.role}</div>
+                    <div className="testimonial-info" style={{ marginLeft: 0, textAlign: 'left', alignItems: 'flex-start' }}>
+                      <div className="testimonial-name" style={{ textAlign: 'left' }}>{testimonial.name}</div>
+                      <div className="testimonial-role" style={{ textAlign: 'left' }}>{testimonial.role}</div>
                     </div>
                   </div>
                 </div>
@@ -146,11 +161,11 @@ const Testimonials = () => {
             >
               {thirdColumn.map((testimonial, index) => (
                 <div key={index} className="testimonial-card">
-                  <p className="testimonial-text">{testimonial.text}</p>
+                  <p className="testimonial-text" style={{ fontSize: '14px' }}>{testimonial.text}</p>
                   <div className="testimonial-author">
-                    <div className="testimonial-info" style={{ marginLeft: 0 }}>
-                      <div className="testimonial-name">{testimonial.name}</div>
-                      <div className="testimonial-role">{testimonial.role}</div>
+                    <div className="testimonial-info" style={{ marginLeft: 0, textAlign: 'left', alignItems: 'flex-start' }}>
+                      <div className="testimonial-name" style={{ textAlign: 'left' }}>{testimonial.name}</div>
+                      <div className="testimonial-role" style={{ textAlign: 'left' }}>{testimonial.role}</div>
                     </div>
                   </div>
                 </div>

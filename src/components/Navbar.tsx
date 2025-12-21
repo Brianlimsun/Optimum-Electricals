@@ -66,17 +66,19 @@ function Navbar({ hideUserMenu = false }: NavbarProps) {
         <nav className="nav-links">
           <Link to="/about-us" className="nav-link">About Us</Link>
           <Link to="/blog" className="nav-link">Blog</Link>
-          {!hideUserMenu && user ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <Link to="/my-profile" style={{ color: '#E5E7EB', fontSize: '14px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'var(--primary)', color: 'black', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '12px' }}>
-                  {profile?.name ? profile.name.charAt(0).toUpperCase() : (user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U')}
-                </div>
-                <span>{profile?.name?.split(' ')[0] || user.displayName?.split(' ')[0] || 'User'}</span>
-              </Link>
-            </div>
+          {user ? (
+            !hideUserMenu && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <Link to="/my-profile" style={{ color: '#E5E7EB', fontSize: '14px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'var(--primary)', color: 'black', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '12px' }}>
+                    {profile?.name ? profile.name.charAt(0).toUpperCase() : (user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U')}
+                  </div>
+                  <span>{profile?.name?.split(' ')[0] || user.displayName?.split(' ')[0] || 'User'}</span>
+                </Link>
+              </div>
+            )
           ) : (
-            <Link to="/login" className="nav-link" style={{ color: 'var(--primary)' }}>Login</Link>
+            <Link to="/login" className="nav-button">Login</Link>
           )}
         </nav>
         <button
@@ -84,7 +86,6 @@ function Navbar({ hideUserMenu = false }: NavbarProps) {
           aria-label={menuOpen ? "Close Menu" : "Open Menu"}
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          <span />
           <span />
           <span />
         </button>

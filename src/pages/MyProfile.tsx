@@ -79,7 +79,7 @@ export default function MyProfile() {
 
     return (
         <div className="page-container">
-            <Navbar hideUserMenu={true} />
+            <Navbar />
             <div style={{ maxWidth: '600px', width: '100%', margin: '120px auto 40px', padding: '20px' }}>
 
                 {/* My Bookings Card */}

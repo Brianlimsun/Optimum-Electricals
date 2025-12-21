@@ -89,9 +89,15 @@ const Footer: React.FC = () => {
                 </div>
             </div>
 
-            {/* Copyright Section */}
-            <div className="footer-copyright">
-                <p>© 2025 Optimum Electricals.</p>
+            {/* Copyright & Credits Section */}
+            <div className="footer-bottom">
+                <div className="footer-copyright">
+                    <p>© 2025 Optimum Electricals.</p>
+                </div>
+
+                <div className="footer-credit">
+                    Designed and Developed by Brian Lim Sun
+                </div>
             </div>
         </footer>
     );
