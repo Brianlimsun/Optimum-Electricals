@@ -20,6 +20,18 @@
       gtag('config', 'G-RENPLRV041');
     </script>
     
+    <script>
+      // GH Pages SPA redirect restoration
+      (function() {
+        var redirect = sessionStorage.redirect;
+        if (redirect) {
+          sessionStorage.removeItem('redirect');
+          var url = new URL(redirect, location.origin);
+          history.replaceState(null, '', url);
+        }
+      })();
+    </script>
+    
     <title>Optimum Electricals – Book an Electrician</title>
   </head>
   <body>
