@@ -5118,3 +5118,863 @@ body {
     font-size: 14px;
   }
 }
+
+/* =============================================
+   BLOG ARTICLE PAGE — ba-* namespace
+   Dark theme, editorial spacing, premium cards
+   ============================================= */
+
+.blog-article-page {
+  min-height: 100vh;
+  background: #080808;
+  color: #e5e7eb;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ── Hero ─────────────────────────────────── */
+.ba-hero {
+  padding: 140px 24px 60px;
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.ba-hero-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.ba-pill {
+  display: inline-block;
+  width: fit-content;
+  background: rgba(250, 204, 20, 0.1);
+  border: 1px solid rgba(250, 204, 20, 0.25);
+  color: #FACC14;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+
+.ba-hero-title {
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0;
+}
+
+.ba-hero-meta {
+  font-size: 17px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+  max-width: 620px;
+}
+
+.ba-divider {
+  width: 48px;
+  height: 2px;
+  background: #FACC14;
+  border-radius: 2px;
+  margin-top: 8px;
+}
+
+/* ── Article body ─────────────────────────── */
+.ba-article {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 24px 120px;
+}
+
+.ba-section {
+  margin-bottom: 80px;
+}
+
+.ba-section-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 24px;
+  letter-spacing: -0.01em;
+}
+
+.ba-lead {
+  font-size: 19px;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0 0 20px;
+  font-weight: 400;
+}
+
+.ba-body {
+  font-size: 16px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0 0 20px;
+}
+
+.ba-body strong {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+}
+
+/* ── Issue list ───────────────────────────── */
+.ba-issue-list {
+  list-style: none;
+  padding: 0;
+  margin: 28px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ba-issue-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.65);
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+}
+
+.ba-issue-dot {
+  width: 6px;
+  height: 6px;
+  background: #FACC14;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Bill image + highlight ───────────────── */
+.ba-bill-wrapper {
+  margin-top: 36px;
+}
+
+.ba-bill-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.ba-bill-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.3);
+  padding: 18px 24px 14px;
+}
+
+.ba-bill-image-wrap {
+  position: relative;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.ba-bill-img {
+  width: 100%;
+  display: block;
+  filter: brightness(0.85);
+  transition: filter 0.3s ease;
+}
+
+.ba-bill-card:hover .ba-bill-img {
+  filter: brightness(0.95);
+}
+
+.ba-bill-highlight {
+  position: absolute;
+  bottom: 18%;
+  left: 10%;
+  right: 10%;
+  background: rgba(250, 204, 20, 0.12);
+  border: 2px solid rgba(250, 204, 20, 0.7);
+  border-radius: 8px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  backdrop-filter: blur(4px);
+}
+
+.ba-highlight-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: #FACC14;
+  letter-spacing: 0.02em;
+}
+
+.ba-highlight-pointer {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(250, 204, 20, 0.8);
+  font-style: italic;
+}
+
+.ba-bill-caption {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+  padding: 14px 24px 18px;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ── Quote block ──────────────────────────── */
+.ba-quote-block {
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid #FACC14;
+  border-radius: 0 12px 12px 0;
+  padding: 28px 32px;
+  margin: 0 0 28px;
+}
+
+.ba-quote-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 20px;
+  font-style: italic;
+}
+
+.ba-quote-divider {
+  width: 32px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+  margin-bottom: 20px;
+}
+
+.ba-quote-refute {
+  font-size: 15px;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0;
+}
+
+.ba-quote-refute em {
+  color: #FACC14;
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* ── Appliance grid ───────────────────────── */
+.ba-appliance-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.ba-appliance-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 16px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.ba-appliance-card:hover {
+  transform: translateY(-3px);
+}
+
+.ba-appliance-card.safe {
+  background: rgba(34, 197, 94, 0.05);
+  border-color: rgba(34, 197, 94, 0.15);
+}
+
+.ba-appliance-card.heavy {
+  background: rgba(239, 68, 68, 0.05);
+  border-color: rgba(239, 68, 68, 0.15);
+}
+
+.ba-appliance-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.ba-appliance-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  width: fit-content;
+  letter-spacing: 0.04em;
+}
+
+.safe-badge {
+  background: rgba(34, 197, 94, 0.12);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+.heavy-badge {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+/* ── Calculation card ─────────────────────── */
+.ba-calc-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-top: 28px;
+}
+
+.ba-calc-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.35);
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.ba-calc-rows {
+  padding: 8px 24px 20px;
+}
+
+.ba-calc-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.ba-calc-row.total {
+  border-bottom: none;
+  padding-top: 18px;
+}
+
+.ba-calc-label {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.ba-calc-row.total .ba-calc-label {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+}
+
+.ba-calc-watt {
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+  font-variant-numeric: tabular-nums;
+}
+
+.ba-calc-watt.highlight {
+  color: #f87171;
+  font-size: 18px;
+}
+
+.ba-calc-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 4px 0;
+}
+
+.ba-calc-warning {
+  background: rgba(239, 68, 68, 0.06);
+  border-top: 1px solid rgba(239, 68, 68, 0.15);
+  padding: 16px 24px;
+  font-size: 14px;
+  color: #f87171;
+  line-height: 1.6;
+}
+
+/* ── Consequence grid ─────────────────────── */
+.ba-consequence-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.ba-consequence-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(239, 68, 68, 0.12);
+  border-radius: 12px;
+  padding: 20px;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.ba-consequence-card:hover {
+  background: rgba(239, 68, 68, 0.04);
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.ba-consequence-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f87171;
+  margin-bottom: 8px;
+}
+
+.ba-consequence-desc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ── Info grid (old wiring) ───────────────── */
+.ba-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.ba-info-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 20px;
+  transition: border-color 0.25s ease;
+}
+
+.ba-info-card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.ba-info-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 8px;
+}
+
+.ba-info-card-desc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* ── Warning list ─────────────────────────── */
+.ba-warning-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.ba-warning-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: rgba(250, 204, 20, 0.04);
+  border: 1px solid rgba(250, 204, 20, 0.1);
+  border-radius: 10px;
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.ba-warning-item:hover {
+  background: rgba(250, 204, 20, 0.08);
+  border-color: rgba(250, 204, 20, 0.2);
+}
+
+.ba-warning-index {
+  font-size: 11px;
+  font-weight: 700;
+  color: #FACC14;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  min-width: 24px;
+}
+
+.ba-warning-text {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+}
+
+/* ── CTA section ──────────────────────────── */
+.ba-cta-section {
+  margin-top: 40px;
+}
+
+.ba-cta-inner {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 56px 48px;
+  text-align: center;
+}
+
+.ba-cta-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 16px;
+  letter-spacing: -0.01em;
+}
+
+.ba-cta-body {
+  font-size: 16px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.5);
+  max-width: 560px;
+  margin: 0 auto 36px;
+}
+
+.ba-cta-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.ba-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  letter-spacing: 0.02em;
+}
+
+.ba-cta-btn.primary {
+  background: #FACC14;
+  color: #000000;
+}
+
+.ba-cta-btn.primary:hover {
+  background: #E6B800;
+  transform: translateY(-2px);
+}
+
+.ba-cta-btn.secondary {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.ba-cta-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* ── Responsive ───────────────────────────── */
+@media (max-width: 768px) {
+  .ba-hero {
+    padding: 120px 20px 48px;
+  }
+
+  .ba-hero-title {
+    font-size: 26px;
+  }
+
+  .ba-appliance-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ba-consequence-grid,
+  .ba-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ba-cta-inner {
+    padding: 36px 24px;
+  }
+
+  .ba-cta-title {
+    font-size: 22px;
+  }
+
+  .ba-bill-highlight {
+    bottom: 10%;
+    left: 5%;
+    right: 5%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .ba-appliance-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ba-article {
+    padding: 0 16px 80px;
+  }
+
+  .ba-cta-actions {
+    flex-direction: column;
+  }
+
+  .ba-cta-btn {
+    width: 100%;
+  }
+}
+
+/* =============================================
+   BLOG LISTING PAGE — bl-* namespace
+   Dark theme, premium cards, scalable grid
+   ============================================= */
+
+.bl-page {
+  min-height: 100vh;
+  background: #080808;
+  color: #e5e7eb;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  padding-bottom: 120px;
+}
+
+/* ── Hero ─────────────────────────────────── */
+.bl-hero {
+  padding: 160px 24px 80px;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.bl-hero-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.bl-pill {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 6px 16px;
+  border-radius: 999px;
+}
+
+.bl-hero-title {
+  font-size: clamp(36px, 6vw, 64px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin: 0;
+}
+
+.bl-hero-subtitle {
+  font-size: clamp(18px, 3vw, 22px);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+  max-width: 680px;
+}
+
+.bl-hero-divider {
+  width: 60px;
+  height: 2px;
+  background: #FACC14;
+  border-radius: 2px;
+  margin-top: 16px;
+}
+
+/* ── Grid section ─────────────────────────── */
+.bl-grid-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.bl-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 40px;
+}
+
+/* ── Blog card ────────────────────────────── */
+.bl-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+}
+
+.bl-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.bl-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.bl-card-img-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #111;
+}
+
+.bl-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bl-card:hover .bl-card-img {
+  transform: scale(1.05);
+}
+
+.bl-card-category {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 6px 12px;
+  border-radius: 999px;
+}
+
+.bl-card-body {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.bl-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 16px;
+}
+
+.bl-card-meta-dot {
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+}
+
+.bl-card-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.35;
+  margin: 0 0 16px;
+  letter-spacing: -0.01em;
+  transition: color 0.3s ease;
+}
+
+.bl-card:hover .bl-card-title {
+  color: #FACC14;
+}
+
+.bl-card-excerpt {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0 0 32px;
+  flex: 1;
+}
+
+.bl-card-cta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-top: auto;
+  transition: color 0.3s ease;
+}
+
+.bl-card:hover .bl-card-cta {
+  color: #FACC14;
+}
+
+.bl-card-cta svg {
+  transition: transform 0.3s ease;
+}
+
+.bl-card:hover .bl-card-cta svg {
+  transform: translateX(4px);
+}
+
+/* ── Placeholder for empty spots ──────────── */
+.bl-placeholder-card {
+  height: 100%;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.bl-placeholder-inner {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.bl-placeholder-icon {
+  margin-bottom: 12px;
+  color: rgba(255, 255, 255, 0.15);
+}
+
+.bl-placeholder-text {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* ── Responsive ───────────────────────────── */
+@media (max-width: 768px) {
+  .bl-hero {
+    padding: 120px 20px 60px;
+  }
+  
+  .bl-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  
+  .bl-card-body {
+    padding: 24px;
+  }
+}

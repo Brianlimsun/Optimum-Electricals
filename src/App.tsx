@@ -10,6 +10,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy'
 import TermsOfService from './pages/TermsOfService'
 import AboutUs from './pages/AboutUs'
 import Blog from './pages/Blog'
+import BlogArticle1 from './pages/BlogArticle1'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import CompleteProfile from './pages/CompleteProfile'
@@ -21,7 +22,7 @@ import './App.css'
 
 function App() {
   const location = useLocation()
-  const showFooter = location.pathname === '/' || location.pathname === '/privacy-policy' || location.pathname === '/terms-of-service' || location.pathname === '/about-us'
+  const showFooter = location.pathname === '/' || location.pathname === '/privacy-policy' || location.pathname === '/terms-of-service' || location.pathname === '/about-us' || location.pathname.startsWith('/blog')
 
   return (
     <AuthProvider>
@@ -34,7 +35,6 @@ function App() {
               element={
                 <div>
                   <Hero />
-
                   <Testimonials />
                   <FAQ />
                 </div>
@@ -48,8 +48,7 @@ function App() {
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/blog" element={<Blog />} />
-            <Route path="/about-us" element={<AboutUs />} />
-            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogArticle1 />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/complete-profile" element={<CompleteProfile />} />
