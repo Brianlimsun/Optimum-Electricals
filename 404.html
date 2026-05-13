@@ -1,11 +1,14 @@
 <!doctype html>
 <html>
   <head>
-    <meta http-equiv="refresh" content="0;url=/Optimum-Electricals/" />
     <script>
-      // GH Pages SPA redirect for subdirectory
+      // GH Pages SPA redirect handling both custom domain and default GitHub pages domain
       sessionStorage.redirect = location.pathname + location.search + location.hash;
-      location.replace('/Optimum-Electricals/');
+      if (location.hostname === 'optimumelectricals.com' || location.hostname === 'www.optimumelectricals.com') {
+        location.replace('/');
+      } else {
+        location.replace('/Optimum-Electricals/');
+      }
     </script>
   </head>
   <body></body>
